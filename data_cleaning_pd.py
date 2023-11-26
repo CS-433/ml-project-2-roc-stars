@@ -19,8 +19,16 @@ df.drop(columns=columns_to_drop, inplace=True)
 df.columns = df.columns.str.replace('_CUD|_PTSD', '')
 
 # Group by column names and merge columns
-merged_df = df.groupby(df.columns, axis=1).apply(lambda x: x.apply(lambda y: ' '.join(map(str, y.dropna())), axis=1))
-merged_df.to_csv('data/clean_pd.csv', sep = ',')
-print(merged_df)
+merged_df = df.groupby(df.columns, axis=1).apply(lambda x: x.apply(lambda y: ' '.join(map(str, y.dropna())) if len(x.columns) > 1 else str(y.iloc[0]), axis=1))
 
-merged_df.to_csv('data/cleaned_data_pd.csv', sep = ',')
+# Remove duplicates
+def remove_consecutive_duplicates(cell):
+    words = cell.split()
+    cleaned_words = [word for i, word in enumerate(words) if i == 0 or word != words[i-1]]
+    return ' '.join(cleaned_words)
+
+cleaned_df = merged_df.applymap(remove_consecutive_duplicates)
+
+# Print the resulting DataFrame
+print(cleaned_df)
+cleaned_df.to_csv('data/cleaned_data_pd.csv', sep = ',')
