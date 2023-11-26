@@ -47,7 +47,7 @@ for i in range(len(columns_containing_cud)):
 pairs_same_experiments = np.array(pairs_same_experiments)
 
 
-"""
+
 data_cud_arr = data_cud.to_numpy()
 data_ptsd_arr = data_ptsd.to_numpy()
 df_arr = df.to_numpy()
@@ -88,4 +88,3 @@ group[group == 'Intrusionsfragebogen (K)'] = 1
 print(group)
 
 cleaned_df.to_csv('data/cleaned_data.csv', sep = ',')
-"""
