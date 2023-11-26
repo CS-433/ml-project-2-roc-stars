@@ -20,6 +20,7 @@ df.columns = df.columns.str.replace('_CUD|_PTSD', '')
 
 # Group by column names and merge columns
 merged_df = df.groupby(df.columns, axis=1).apply(lambda x: x.apply(lambda y: ' '.join(map(str, y.dropna())), axis=1))
+merged_df.to_csv('data/clean_pd.csv', sep = ',')
 print(merged_df)
 
 merged_df.to_csv('data/cleaned_data_pd.csv', sep = ',')
