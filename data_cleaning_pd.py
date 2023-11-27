@@ -81,6 +81,9 @@ filled_df = pd.concat([continuous_df, binary_df, new_labels], axis = 1)
 min_std = 0.1
 high_std_columns = filled_df.columns[filled_df.std() > min_std]
 final_df = filled_df[high_std_columns]
+
+# Reset index
+final_df.reset_index(drop=True, inplace=True)
 print(final_df)
 
 final_df.to_csv('data/final_data.csv', sep = ';')
