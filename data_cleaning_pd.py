@@ -87,3 +87,5 @@ final_df.reset_index(drop=True, inplace=True)
 print(final_df)
 
 final_df.to_csv('data/final_data.csv', sep = ';')
+
+
