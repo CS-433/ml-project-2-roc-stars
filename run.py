@@ -1,15 +1,13 @@
 from helper import *
 import pandas as pd
-import numpy as np
 
 from sklearn.model_selection import train_test_split #ptr que ce step on pourra le faire dans le datacleaning
 
-# Import tuning models
-from sklearn.model_selection import GridSearchCV
-
-# Import scoring methods
-from sklearn.metrics import classification_report
-
+# Import models
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 
 
 # Load dataset
@@ -21,22 +19,12 @@ y = df['SURVEY_NAME']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 # Display average F1 scores
-avg_f1_knn, avg_f1_svm, avg_f1_logreg = average_f1_scores(X_train, y_train)
-print("Average F1 Score (KNN):", avg_f1_knn) #0.7929342986844565
-print("Average F1 Score (SVM):", avg_f1_svm) # 0.8239125211396205
-print("Average F1 Score (Logistic Regression):", avg_f1_logreg) # 0.8654894678589372
+f1_logreg, acc_logreg = performance(LogisticRegression(), X_train, y_train)
+f1_knn, acc_knn = performance(KNeighborsClassifier(), X_train, y_train)
+f1_svm, acc_svm = performance(SVC(), X_train, y_train)
+f1_mlp, acc_mlp = performance(MLPClassifier(hidden_layer_sizes=(50, 50), max_iter=1000, random_state=42, beta_2=0.9, beta_1=0.99, solver='sgd', activation='relu', batch_size=128, momentum=0.99), X_train, y_train)
 
-
-# Model Performance
-
-#Create the model
-logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
-
-# Train the model
-logreg_model.fit(X_train, y_train)
-
-# Make predictions
-y_pred = logreg_model.predict(X_test)
-
-# Evaluate the model
-print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Logistic regression\n","Accuracy: ", acc_logreg, "\n", "F1 score :", f1_logreg) # f1 = 0.8654894678589372
+print("KNN\n","Accuracy: ", acc_knn, "\n", "F1 score :", f1_knn) # f1 = 0.7929342986844565
+print("SVM\n","Accuracy: ", acc_svm, "\n", "F1 score :", f1_svm) # f1 = 0.8239125211396205
+print("MLP\n","Accuracy: ", acc_mlp, "\n", "F1 score :", f1_mlp) # f1 = 0.8769064263368993
