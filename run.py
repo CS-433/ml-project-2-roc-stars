@@ -28,3 +28,4 @@ print("Logistic regression\n","Accuracy: ", acc_logreg, "\n", "F1 score :", f1_l
 print("KNN\n","Accuracy: ", acc_knn, "\n", "F1 score :", f1_knn) # f1 = 0.7929342986844565
 print("SVM\n","Accuracy: ", acc_svm, "\n", "F1 score :", f1_svm) # f1 = 0.8239125211396205
 print("MLP\n","Accuracy: ", acc_mlp, "\n", "F1 score :", f1_mlp) # f1 = 0.8769064263368993
+
