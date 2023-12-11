@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd 
 import time
 from helper import *
@@ -38,7 +37,6 @@ param_grid = {
     'hidden_layer_sizes': [(50, 50), (55, 55)],
     'activation': ['relu'],
     'solver': ['adam', 'sgd'],
-    'alpha': [0.0001, 0.001, 0.01, 0.1],
     'max_iter': [1000],
     'learning_rate': ['constant'],
     'batch_size': [32, 128, 256, 512],
@@ -59,10 +57,11 @@ fitting_time = stop_time-start_time
 print("Fitting time: ", fitting_time)
 
 # Print the best hyperparameters
-print("Best Hyperparameters:", grid_search.best_params_) # {'activation': 'relu', 'alpha': 0.5, 'batch_size': 32, 
-                                                         # 'beta_1': 0.9, 'beta_2': 0.99, 'hidden_layer_sizes': (50, 50), 
-                                                         # 'learning_rate': 'constant', 'max_iter': 1000, 'momentum': 0.95, 
+print("Best Hyperparameters:", grid_search.best_params_) # {'activation': 'relu', 'alpha': 0.0001, 'batch_size': 256, '
+                                                         # beta_1': 0.9, 'beta_2': 0.99, 'hidden_layer_sizes': (55, 55), 
+                                                         # 'learning_rate': 'constant', 'max_iter': 1000, 'momentum': 0.99, 
                                                          # 'solver': 'sgd'}
+                                                         # attention ce sont pas ces params qu'on utilise
 
 # Make predictions on the test set using the best model
 y_pred = grid_search.predict(X_test)
@@ -73,7 +72,7 @@ f1score = f1_score(y_test, y_pred)
 print("MLP\n","Accuracy: ", accuracy, "\n", "F1 score :", f1score)
 
 # Evaluate accuracy using kfold
-new_mlp_classifier = MLPClassifier(hidden_layer_sizes=(50, 50), max_iter=1000, random_state=42, beta_2=0.9, beta_1=0.99, solver='sgd', activation='relu', batch_size=128, momentum=0.99)
+new_mlp_classifier = MLPClassifier(hidden_layer_sizes=(50, 50), max_iter=1000, random_state=42, beta_2=0.99, beta_1=0.9, solver='sgd', activation='relu', batch_size=128, momentum=0.99)
 mlp_f1_k, mlp_acc_k = performance(new_mlp_classifier, X_train, y_train)
 print("MLP\n","Accuracy: ", mlp_acc_k, "\n", "F1 score :", mlp_f1_k)
 
