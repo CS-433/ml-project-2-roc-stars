@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, accuracy_score
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.svm import SVC
 from sklearn.pipeline import make_pipeline
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import RocCurveDisplay
 
 # Load dataset
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
@@ -37,6 +39,9 @@ f1_l2 = f1_score(y_test, y_pred_l2)
 print('Accuracy: ', acc_l2)
 print("F1 Score:", f1_l2)
 
+# ROC Curve plot
+RocCurveDisplay.from_predictions(y_test, y_pred_l2, estimator_name='ROC curve')
+plt.show()
 
 # Random Forest Classifier
 param_grid = {
@@ -87,3 +92,57 @@ f1_svm = f1_score(y_test, y_pred_svm)
 print(f"Best Parameters: {best_params2}")
 print(f"Best Model Accuracy: {accuracy_svm}")
 print(f"Best Model F1 score: {f1_svm}")
+
+# Gradient boost
+gb_classifier = GradientBoostingClassifier(random_state=42)
+
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'learning_rate': [0.01, 0.1, 0.2],
+    'max_depth': [3, 4, 5],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+
+# Use GridSearchCV to perform the search
+grid_search = GridSearchCV(gb_classifier, param_grid, cv=5, scoring='accuracy')
+grid_search.fit(X_train, y_train)
+
+# Print the best hyperparameters
+print("Best Hyperparameters:", grid_search.best_params_)
+
+# Get the best model
+best_gb_model = grid_search.best_estimator_
+
+# Make predictions on the test set
+y_pred = best_gb_model.predict(X_test)
+
+# Evaluate the performance of the tuned model
+accuracy = accuracy_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+print("Accuracy on Test Set:", accuracy)
+print("F1 score on Test Set:", f1) 
+
+
+logreg = LogisticRegression(max_iter = 1000, multi_class = 'multinominal')
+# Define a range of regularization parameters (C values) to search
+param_grid = {'C': np.logspace(-4, 4, 9)}
+
+# Use GridSearchCV to perform the search
+grid_search = GridSearchCV(logreg, param_grid, cv=5, scoring='accuracy')
+grid_search.fit(X_train, y_train)
+
+# Print the best hyperparameter
+print("Best Regularization Parameter (C):", grid_search.best_params_)
+
+# Get the best model
+best_logreg_model = grid_search.best_estimator_
+
+# Make predictions on the test set
+y_pred1 = best_logreg_model.predict(X_test)
+
+# Evaluate the performance of the tuned model
+accuracy1 = accuracy_score(y_test, y_pred1)
+f11 = f1_score(y_test, y_pred1)
+print("Accuracy on Test Set:", accuracy1)
+print("F1 score on Test Set:", f11) 
