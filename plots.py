@@ -5,6 +5,8 @@ import os
 
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import SparsePCA
+
 
 # Directory where the images will be saved
 path = "plots/"
@@ -26,7 +28,25 @@ y = df['SURVEY_NAME']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 
+# Trying sparse PCA
+spca = SparsePCA(n_components=2)
+spca_result = spca.fit_transform(X_train)
+
+# Create a DataFrame for visualization (optional)
+df_spca = pd.DataFrame(data=spca_result, columns=['PC1', 'PC2'])
+
+# Scatter plot
+plt.scatter(df_spca['PC1'], df_spca['PC2'])
+plt.title('Sparse PCA - Scatter Plot of PC1 vs PC2')
+plt.xlabel('Principal Component 1 (PC1)')
+plt.ylabel('Principal Component 2 (PC2)')
+plt.savefig(path + "pca_sparse.png")
+plt.show()
+
+
+
 # Apply PCA to reduce the data to 2 dimensions
+
 pca = PCA(n_components=2)
 x_tr_PCA = pca.fit_transform(X_train)
 
@@ -41,7 +61,7 @@ x_tr_PCA_PTSD = x_tr_PCA[ind_PTSD]
 
 # Explained variance ratio
 explained_variance_ratio = pca.explained_variance_ratio_
-print("Explained Variance Ratio:", explained_variance_ratio)
+print("Explained Variance Ratio obtained with PCA:", explained_variance_ratio)
 
 # Plot the 2D PCA result
 plt.figure(figsize=im_size) 
@@ -90,7 +110,7 @@ plt.show()
 # CATEGORICAL AND CONTINOUS FEATURES
 
 # Categorical headers keyword
-categorical_headers = ['REAKTION', 'MODALITAET', 'STRATEGIE', 'TRIGGER']
+categorical_headers = ['REAKTION', 'MODALITAET', 'STRATEGIE', 'TRIGGER', 'STIMMUNG']
 
 # Get headers
 headers_list = df.columns.tolist()
@@ -113,6 +133,9 @@ categorical_ratio = categorical / nbr_features
 continuous_ratio = continuous / nbr_features
 ratios = [continuous_ratio, categorical_ratio]
 types = ['Continuous', 'Categorical']
+print(" Ratio continous features: ", continuous_ratio )
+print(" Ratio categorical features: ", categorical_ratio )
+
 
 # Plots categorical vs continuous features
 plt.figure(figsize=im_size) 
@@ -123,3 +146,31 @@ plt.xticks(types, ["Continuous", "Categorical"], fontsize=font_size)
 plt.savefig(path + "catcont.png")
 plt.rc('font', size=18)
 plt.show()
+
+# Plots missing values 
+
+#Import df before nan removal
+df_nan = pd.read_csv('data/nan_data.csv', sep=";", header=0, index_col=0)
+
+
+# Calculate the percentage of NaN values in each column
+df_nan = (df_nan.isna().mean() * 100)
+
+# Converts df into numpy array
+nans = df_nan.values
+
+# Define feature vector
+features = np.arange(1, len(nans)+1)
+
+# Plot NaN ratio
+plt.figure(figsize=(8, 6)) 
+plt.bar(features, nans, color='orange')
+plt.xlabel("Feature number", fontsize=font_size)
+plt.ylabel("Ratio of NaN values", fontsize=font_size)
+plt.savefig(path + "nan.png")
+plt.rc('font', size=18)
+plt.show()
+
+# Number fo features larger than 15 %
+features_nan = np.sum(nans > 15)
+print( features_nan , "% of features have a percentage of NaN higher than 15%. ")
