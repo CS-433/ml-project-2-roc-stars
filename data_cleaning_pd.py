@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
+#Turn off Warning: Modyfing views of the dataframe
+pd.set_option('mode.chained_assignment', None)
+
+
 # Load dataset
 df_raw = pd.read_csv('data/EMemory_data.csv', sep=";", header=0)
 
@@ -48,6 +52,9 @@ cleaned_df = cleaned_df.mask(cleaned_df > 10, np.nan)
 
 # Replace non-standard representations with actual NaN
 cleaned_df.replace(['nan', ''], np.nan, inplace=True)
+
+# Saves dataframe for NaN Visualisation
+cleaned_df.to_csv('data/nan_data.csv', sep = ';')
 
 nan_perc_limit = 15
 # Calculate the percentage of NaN values in each column
