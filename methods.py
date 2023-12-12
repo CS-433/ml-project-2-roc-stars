@@ -1,9 +1,11 @@
 import pandas as pd 
 from helper import *
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
+# Import Models
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from sklearn.mixture import GaussianMixture
+# Import Evaluation methods
+from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score
 
 
@@ -24,10 +26,29 @@ logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter
 logreg_model.fit(X_train, y_train)
 
 # Make predictions
-y_pred = logreg_model.predict(X_test)
+y_pred_logreg = logreg_model.predict(X_test)
 
 # Evaluate the model
-print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred_logreg))
 
-f1score = f1_score(y_test, y_pred)
-print(f1score)
+f1score = f1_score(y_test, y_pred_logreg)
+print("Logistic Regression f1 score: ", f1score)
+
+#Gaussian Mixture Matrix
+
+# Create the model
+gmm_model = GaussianMixture(n_components=2, random_state=42)
+
+# TRain the model
+gmm_model.fit(X_train)
+
+# Make predictions
+y_pred_gmm = gmm_model.predict(X_test)
+
+# Evaluate the model
+print("Classification Report:\n", classification_report(y_test, y_pred_gmm))
+
+f1score = f1_score(y_test, y_pred_gmm)
+print("GMM f1 score: ", f1score)
+
+
