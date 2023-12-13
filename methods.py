@@ -32,7 +32,7 @@ y_pred_logreg = logreg_model.predict(X_test)
 print("Classification Report:\n", classification_report(y_test, y_pred_logreg))
 
 f1score = f1_score(y_test, y_pred_logreg)
-print("Logistic Regression f1 score: ", f1score)
+print("Logistic Regression f1 score: ", f1score) # 0.816
 
 #Gaussian Mixture Matrix
 
@@ -49,6 +49,6 @@ y_pred_gmm = gmm_model.predict(X_test)
 print("Classification Report:\n", classification_report(y_test, y_pred_gmm))
 
 f1score = f1_score(y_test, y_pred_gmm)
-print("GMM f1 score: ", f1score)
+print("GMM f1 score: ", f1score) # 0.14184397163120568
 
 
