@@ -20,13 +20,7 @@ y = df['SURVEY_NAME']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-# Multilayer Perceptron
-"""
-# Standardize the features (recommended for neural networks)
-scaler = StandardScaler()
-X_train_sd = scaler.fit_transform(X_train)
-X_test_sd = scaler.transform(X_test)
-"""
+# MULTILAYER PERCEPTRON
 
 # MLP
 mlp_classifier = MLPClassifier()
@@ -71,10 +65,6 @@ accuracy = accuracy_score(y_test, y_pred)
 f1score = f1_score(y_test, y_pred)
 print("MLP\n","Accuracy: ", accuracy, "\n", "F1 score :", f1score)
 
-# Evaluate accuracy using kfold
-new_mlp_classifier = MLPClassifier(hidden_layer_sizes=(50, 50), max_iter=1000, random_state=42, beta_2=0.99, beta_1=0.9, solver='sgd', activation='relu', batch_size=128, momentum=0.99)
-mlp_f1_k, mlp_acc_k = performance(new_mlp_classifier, X_train, y_train)
-print("MLP\n","Accuracy: ", mlp_acc_k, "\n", "F1 score :", mlp_f1_k)
 
 # Evaluate accuracy using classification_report function
 print("Classification Report:\n", classification_report(y_test, y_pred))
