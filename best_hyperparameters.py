@@ -1,3 +1,14 @@
+
+
+# ce fichier est dans methods.py mtn donc il faudra le supprimer a la fin
+
+
+
+
+
+
+
+
 import pandas as pd
 import time
 from sklearn.model_selection import train_test_split #ptr que ce step on pourra le faire dans le datacleaning
@@ -128,10 +139,12 @@ print("Fitting time: ", fitting_time)
 
 # Best hyperparams
 best_params_mlp = grid_search.best_params_
-print("Best Hyperparameters:", best_params_mlp) # {'activation': 'relu', 'batch_size': 256, 'beta_1': 0, 'beta_2': 0.99, 'hidden_layer_sizes': (55, 55), 'learning_rate': 'constant', 'max_iter': 1000, 'momentum': 0.99, 'solver': 'adam'}
+print("Best Hyperparameters:", best_params_mlp) # {'activation': 'relu', 'batch_size': 256, 'beta_1': 0.9, 'beta_2': 0.99, 'hidden_layer_sizes': (55, 55), 'learning_rate': 'constant', 'max_iter': 1000, 'momentum': 0.99, 'solver': 'adam'}
 
 # Assess accuracy and f1 score
-y_pred_mlp = grid_search.predict(X_test)
+best_mlp_model = grid_search.best_estimator_
+y_pred_mlp = best_mlp_model.predict(X_test)
+#y_pred_mlp = grid_search.predict(X_test)
 accuracy_mlp = accuracy_score(y_test, y_pred_mlp)
 f1score_mlp = f1_score(y_test, y_pred_mlp)
 print("MLP\n","Accuracy: ", accuracy_mlp, "\n", "F1 score :", f1score_mlp)
