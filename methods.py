@@ -1,5 +1,6 @@
 import pandas as pd 
 from helper import *
+import time
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.mixture import GaussianMixture
@@ -7,12 +8,9 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
-from sklearn.mixture import GaussianMixture
-from sklearn.metrics import classification_report
-from sklearn.metrics import f1_score, accuracy_score
+from sklearn.metrics import classification_report, f1_score, accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.svm import SVC
 
 
 # Load dataset
@@ -50,15 +48,6 @@ print("Classification Report:\n", classification_report(y_test, y_pred_lr))
 print("LR\n","Accuracy: ", accuracy_lr, "\n", "F1 score :", f1score_lr) 
 # Accuracy:  0.867816091954023 
 # F1 score : 0.816
-
-# Gaussian Mixture Matrix ====================================================================>
-gmm_model = GaussianMixture(n_components=2, random_state=42)
-gmm_model.fit(X_train)
-y_pred_gmm = gmm_model.predict(X_test)
-
-print("Classification Report:\n", classification_report(y_test, y_pred_gmm))
-f1score = f1_score(y_test, y_pred_gmm)
-print("GMM f1 score: ", f1score) # 0.14184397163120568
 
 # Random Forest Classifier ====================================================================>
 param_grid = {
@@ -137,14 +126,11 @@ params_knn = {
     'metric': ['euclidean', 'manhattan', 'minkowski']
 }
 
-# Model definition
 knn = KNeighborsClassifier()
 
 # Tuning and fitting using Grid Search
 grid_search = GridSearchCV(knn, params_knn, cv=5, scoring='f1_weighted')
 grid_search.fit(X_train, y_train)
-
-# Best hyperparams
 best_params_knn = grid_search.best_params_
 print("Best Parameters:", best_params_knn) # {'metric': 'manhattan', 'n_neighbors': 9}
 
@@ -160,7 +146,7 @@ print("KNN\n","Accuracy: ", accuracy_knn, "\n", "F1 score :", f1score_knn)
 # SUPPORT VECTOR MACHINE ====================================================================>
 # Hyperparameters to try
 params_svm = {
-    'C': [0.1, 1, 10],  # adjust as needed
+    'C': [0.1, 1, 10], 
     'kernel': ['linear', 'rbf', 'poly'],
     'gamma': ['scale', 'auto'] 
 }
@@ -228,7 +214,7 @@ print("MLP\n","Accuracy: ", accuracy_mlp, "\n", "F1 score :", f1score_mlp)
 # F1 score : 0.7967479674796748
 
 
-# GAUSSIAN MATRIX MODEL ====================================================================>
+# GAUSSIAN MIXTURE MODEL ====================================================================>
 # Hyperparameters to try
 params_gmm = {
     'n_components': [2, 3, 4, 5], 

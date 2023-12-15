@@ -20,11 +20,11 @@ im_size = (8,6)
 # Load dataset
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
 
-# Seperate X from prediction y
+# Separate X from prediction y
 X = df.drop(columns=['SURVEY_NAME'])
 y = df['SURVEY_NAME']
 
-# Seperate data into training and testing
+# Separate data into training and testing
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
 
@@ -32,7 +32,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 spca = SparsePCA(n_components=2)
 spca_result = spca.fit_transform(X_train)
 
-# Create a DataFrame for visualization (optional)
+# Create a DataFrame for visualization
 df_spca = pd.DataFrame(data=spca_result, columns=['PC1', 'PC2'])
 
 # Scatter plot
@@ -108,7 +108,6 @@ ax.view_init(elev=0, azim=80)
 plt.show()
 
 # CATEGORICAL AND CONTINOUS FEATURES
-
 # Categorical headers keyword
 categorical_headers = ['REAKTION', 'MODALITAET', 'STRATEGIE', 'TRIGGER', 'STIMMUNG']
 
@@ -120,7 +119,6 @@ categorical = 0
 
 # Check if categorical or continous
 for keyword in categorical_headers:
-    
     matching_strings = [string for string in headers_list if keyword in string]
     categorical += len(matching_strings)
 
@@ -148,15 +146,11 @@ plt.rc('font', size=18)
 plt.show()
 
 # Plots missing values 
-
 #Import df before nan removal
 df_nan = pd.read_csv('data/nan_data.csv', sep=";", header=0, index_col=0)
 
-
 # Calculate the percentage of NaN values in each column
 df_nan = (df_nan.isna().mean() * 100)
-
-# Converts df into numpy array
 nans = df_nan.values
 
 # Define feature vector
