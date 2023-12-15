@@ -16,7 +16,7 @@ df_raw[df_raw == '<no-response>'] = np.nan
 # Drop columns with only NaN values
 df = df_raw.dropna(axis=1, how='all')
 
-# Covert predictions to 0 (PTSD) and 1 (CUD)
+# Convert predictions to 0 (PTSD) and 1 (CUD)
 labels = df['SURVEY_NAME']
 labels[labels == 'Intrusionsfragebogen (T)'] = 0
 labels[labels == 'Intrusionsfragebogen (K)'] = 1
@@ -47,7 +47,7 @@ cleaned_df = merged_df.applymap(remove_consecutive_duplicates)
 # Replace numbers to numeric objects
 cleaned_df = cleaned_df.apply(pd.to_numeric, errors='coerce')
 
-# Replace values larger than 10 to NaN 
+# Replace values larger than 10 by NaN 
 cleaned_df = cleaned_df.mask(cleaned_df > 10, np.nan)
 
 # Replace non-standard representations with actual NaN
@@ -91,3 +91,4 @@ final_df = filled_df[high_std_columns]
 print(final_df)
 
 final_df.to_csv('data/final_data.csv', sep = ';')
+
