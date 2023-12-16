@@ -6,6 +6,10 @@ import os
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import SparsePCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.mixture import GaussianMixture
+from sklearn.metrics import classification_report
+from sklearn.metrics import f1_score
 
 
 # Directory where the images will be saved
@@ -168,3 +172,54 @@ plt.show()
 # Number fo features larger than 15 %
 features_nan = np.sum(nans > 15)
 print( features_nan , "% of features have a percentage of NaN higher than 15%. ")
+
+# Plot weigths linear regression
+
+# Logistic Regression
+
+#Create the model
+logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
+
+# Train the model
+logreg_model.fit(X_train, y_train)
+
+# Make predictions
+y_pred_logreg = logreg_model.predict(X_test)
+
+# Display the weights
+weights = logreg_model.coef_
+intercept = logreg_model.intercept_ # maybe it could also bring smth to look at the intercept
+
+# Display the weights
+weights = logreg_model.coef_[0]  # Assuming binary classification, so there is only one set of weights
+intercept = logreg_model.intercept_
+
+# Selects significant weights
+weights[np.abs(weights) < 0.5] = 0
+
+# Get the indices of non-zero elements
+nonzero_indices = np.nonzero(weights)[0]
+
+# Plot the norm of the weights
+plt.bar(range(len(weights)), weights)
+plt.xlabel('Feature Index')
+plt.ylabel('Norm of Weights')
+plt.title('Norm of Weights in Logistic Regression')
+plt.savefig(path + "weights.png")
+plt.show()
+
+# Find inidices with significant weights
+nonzero_indiced = np.nonzero(weights)
+
+# Initialize feature vector
+features = []
+
+# Replace indice by feature
+for indice in nonzero_indices:
+    features.append(df.columns[indice])
+    
+# Display features
+print(" Features with significant weights: ", features)
+    
+
+
