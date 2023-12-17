@@ -1,13 +1,14 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import os
+from sklearn.metrics import roc_curve, auc, accuracy_score, f1_score
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import SparsePCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.manifold import TSNE
 from sklearn.model_selection import GridSearchCV
+
 
 # Directory where the images will be saved
 path = "plots/"
@@ -266,10 +267,54 @@ plt.title('t-SNE Visualization')
 plt.colorbar(scatter, ticks=np.arange(3), label='Target Class')
 plt.show()
 
-# PAIRWISE PLOT =======================================================================>
+# PAIRWISE PLOT ============================================================================>
 import seaborn as sns
 
 # Assuming X_train is your training set DataFrame
 sns.pairplot(X_train, hue='target_variable', diag_kind='kde')
 plt.show()
 
+# ROC CURVE ===============================================================================>
+# Best decision threshold for Logistic Regression 
+logreg = LogisticRegression(C=1, penalty='l2')
+logreg.fit(X_train, y_train)
+thrs = np.linspace(0.2,0.8,13)
+accs = []
+f1s = []
+for thr in thrs:
+    y_prob = logreg.predict_proba(X_test)[:, 1]
+    y_pred_custom = (y_prob >= thr).astype(int)
+    acc = accuracy_score(y_pred_custom, y_test)
+    f1 = f1_score(y_pred_custom, y_test)
+    accs.append(acc)
+    f1s.append(f1)
+    print(f"Threshold {thr}\n","Accuracy: ", acc, "\n", "F1 score :", f1) 
+
+max_ind = np.argmax(f1s)
+f1_max = np.max(f1s)
+acc_max = accs[max_ind]
+thr_max = thrs[max_ind]
+print(f"The maximum f1 score is obtained with a threshold set at {thr_max} and renders: \n",
+      "Accuracy: ", acc_max, "\n", "F1 score :", f1_max)
+
+# ROC Curve plot
+y_prob = logreg.predict_proba(X_test)[:, 1]
+
+# Compute the ROC curve values
+fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+closest_index = np.argmin(np.abs(thresholds - 0.5))
+
+# Compute the area under the ROC curve (AUC)
+roc_auc = auc(fpr, tpr)
+
+# Plot the ROC curve
+plt.figure(figsize=(8, 6))
+plt.plot(fpr, tpr, color='red', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--', label='Random Classifier')
+plt.scatter(fpr[closest_index], tpr[closest_index], color='black', marker='o', label='Selected Threshold = 0.5', s=80, zorder=10)
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.savefig("plots/ROC_curve.png")
+plt.legend(loc='lower right')
+plt.show()
