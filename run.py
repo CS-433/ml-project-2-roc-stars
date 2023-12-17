@@ -2,6 +2,7 @@ from helper import *
 import pandas as pd
 from sklearn.model_selection import train_test_split #ptr que ce step on pourra le faire dans le datacleaning
 from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import f1_score, accuracy_score
 
 
 # Load dataset
