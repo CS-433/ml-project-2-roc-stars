@@ -84,11 +84,16 @@ binary_df[binary_df.columns] = binary_df[binary_df.columns].apply(lambda x: x.fi
 
 filled_df = pd.concat([continuous_df, binary_df, new_labels], axis = 1)
 
-# Drop columns with low std
+# Assess smallest std features
+numeric_columns = filled_df.select_dtypes(include='number')
+std_values = numeric_columns.std()
+second_min_std = std_values.nsmallest(3)
+print(second_min_std)
+
+# Drop columns with low std (<0.1)
 min_std = 0.1
 high_std_columns = filled_df.columns[filled_df.std() > min_std]
 final_df = filled_df[high_std_columns]
 print(final_df)
 
 final_df.to_csv('data/final_data.csv', sep = ';')
-
