@@ -1,9 +1,6 @@
 from helper import *
 import pandas as pd
 from sklearn.model_selection import train_test_split #ptr que ce step on pourra le faire dans le datacleaning
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 
 
