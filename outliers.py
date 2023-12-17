@@ -23,7 +23,3 @@ X_test_nout = remove_outliers(X_test)
 logistic(X_train_nout, X_test_nout, y_train, y_test)
 # Accuracy:  0.7873563218390804
 # F1 score : 0.7040000000000001
-
-
-
-    

@@ -185,48 +185,6 @@ print("SVM\n","Accuracy: ", accuracy_svm, "\n", "F1 score :", f1score_svm)
 # Accuracy:  0.8390804597701149 
 # F1 score : 0.7741935483870969
 
-# MULTILAYER PERCEPTRON ====================================================================>
-# Hyperparameters to try
-params_mlp = {
-    'hidden_layer_sizes': [(50, 50), (55, 55)],
-    'activation': ['relu'],
-    'solver': ['adam', 'sgd'],
-    'max_iter': [1000],
-    'learning_rate': ['constant'],
-    'batch_size': [32, 128, 256, 512],
-    'momentum': [0.9, 0.95,0.99],
-    'beta_1': [0.9, 0,99],
-    'beta_2': [0.9, 0.99],
-}
-
-# Model definition
-mlp_classifier = MLPClassifier()
-
-# Create the grid search object
-scoring_metrics = ['accuracy', 'f1_weighted']
-grid_search = GridSearchCV(mlp_classifier, params_mlp, cv=5, scoring=scoring_metrics, refit='f1_weighted')
-
-# Tuning and fitting using Grid Search
-start_time = time.time()
-grid_search.fit(X_train, y_train)
-stop_time = time.time()
-fitting_time = stop_time-start_time
-print("Fitting time: ", fitting_time)
-
-# Best hyperparams
-best_params_mlp = grid_search.best_params_
-print("Best Hyperparameters:", best_params_mlp) # {'activation': 'relu', 'batch_size': 256, 'beta_1': 0.9, 'beta_2': 0.99, 'hidden_layer_sizes': (55, 55), 'learning_rate': 'constant', 'max_iter': 1000, 'momentum': 0.99, 'solver': 'adam'}
-
-# Assess accuracy and f1 score
-best_mlp_model = grid_search.best_estimator_
-y_pred_mlp = best_mlp_model.predict(X_test)
-#y_pred_mlp = grid_search.predict(X_test)
-accuracy_mlp = accuracy_score(y_test, y_pred_mlp)
-f1score_mlp = f1_score(y_test, y_pred_mlp)
-print("MLP\n","Accuracy: ", accuracy_mlp, "\n", "F1 score :", f1score_mlp)
-# Accuracy:  0.8563218390804598 
-# F1 score : 0.7967479674796748
-
 
 # GAUSSIAN MATRIX MODEL ====================================================================>
 # Hyperparameters to try

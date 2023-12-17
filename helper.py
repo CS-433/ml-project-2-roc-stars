@@ -1,6 +1,4 @@
 import numpy as np
-
-# Import scoring methods
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.metrics import make_scorer, f1_score, accuracy_score
 from sklearn.model_selection import GridSearchCV
@@ -37,9 +35,29 @@ def performance(model, X_train, y_train, k_folds=5):
    
     return avg_f1, avg_accuracy
 
+def convert_int_columns_to_int(df):
+    """
+    Convert columns with integer values (even if represented as floats) to integer type in a pandas DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): Input DataFrame.
+
+    Returns:
+    - pd.DataFrame: DataFrame with columns containing integer values converted to integer type.
+
+    Notes:
+    - The function iterates over each column in the DataFrame.
+    - If a column is of type float and all its values are integers, it converts the column to integer type using `astype(int)`.
+    - Columns with non-integer values or other data types remain unchanged.
+    """
+    for col in df.columns:
+        if np.issubdtype(df[col].dtype, np.floating) and np.all(df[col] % 1 == 0):
+            df[col] = df[col].astype(int)
+    return df
+
 def remove_outliers(X, iqr_multiplier=1.5):
     """
-    Remove outliers from numerical columns of a DataFrame using the IQR (Interquartile Range) method.
+    Remove outliers from continuous columns of a DataFrame using the IQR (Interquartile Range) method.
 
     Parameters:
     - X (pd.DataFrame): Input DataFrame containing a mix of categorical and numerical columns.
@@ -52,9 +70,13 @@ def remove_outliers(X, iqr_multiplier=1.5):
     Notes:
     - Categorical columns are not processed; outlier removal is applied only to numerical columns.
     - Outliers are identified based on the IQR method for each numerical column.
+    - Integer columns are converted to integer types before outlier removal on float columns.
     - The function converts the DataFrame to a NumPy array for processing.
     """
-    # Create a mask for numerical columns
+    # Identify and convert integer columns to integer type
+    X = convert_int_columns_to_int(X)
+
+    # Create a mask for numerical columns (after integer conversion)
     numerical_mask = X.dtypes.apply(lambda x: np.issubdtype(x, np.number))
 
     # Convert DataFrame to NumPy array

@@ -5,9 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.neural_network import MLPClassifier
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 
@@ -33,21 +31,19 @@ mlp_classifier = MLPClassifier()
 
 # Define the hyperparameter grid to search
 
-param_grid = {
+params_mlp = {
     'hidden_layer_sizes': [(50, 50), (55, 55)],
-    'activation': ['relu'],
+    'activation': ['tanh', 'relu'],
     'solver': ['adam', 'sgd'],
     'max_iter': [1000],
-    'learning_rate': ['constant'],
-    'batch_size': [32, 128, 256, 512],
-    'momentum': [0.9, 0.95,0.99],
+    'batch_size': [32, 64, 128, 256, 512],
     'beta_1': [0.9, 0,99],
-    'beta_2': [0.9, 0.99],
+    'beta_2': [0.7, 0.8, 0.9, 0.99],
 }
 
 # Create the grid search object
 scoring_metrics = ['accuracy', 'f1_weighted']
-grid_search = GridSearchCV(mlp_classifier, param_grid, cv=5, scoring=scoring_metrics, refit='f1_weighted')
+grid_search = GridSearchCV(mlp_classifier, params_mlp, cv=5, scoring=scoring_metrics, refit='f1_weighted')
 
 # Fit the grid search to the data
 start_time = time.time()
@@ -57,11 +53,7 @@ fitting_time = stop_time-start_time
 print("Fitting time: ", fitting_time)
 
 # Print the best hyperparameters
-print("Best Hyperparameters:", grid_search.best_params_) # {'activation': 'relu', 'alpha': 0.0001, 'batch_size': 256, '
-                                                         # beta_1': 0.9, 'beta_2': 0.99, 'hidden_layer_sizes': (55, 55), 
-                                                         # 'learning_rate': 'constant', 'max_iter': 1000, 'momentum': 0.99, 
-                                                         # 'solver': 'sgd'}
-                                                         # attention ce sont pas ces params qu'on utilise
+print("Best Hyperparameters:", grid_search.best_params_) # {'activation': 'tanh', 'batch_size': 64, 'beta_1': 0, 'beta_2': 0.99, 'hidden_layer_sizes': (50, 50), 'max_iter': 1000, 'solver': 'adam'}
 
 # Make predictions on the test set using the best model
 y_pred = grid_search.predict(X_test)
