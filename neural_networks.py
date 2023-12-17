@@ -1,7 +1,7 @@
 import pandas as pd 
 import time
 from helper import *
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV, cross_val_score, StratifiedKFold
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV, StratifiedKFold
 from sklearn.metrics import classification_report, accuracy_score, f1_score
 from sklearn.neural_network import MLPClassifier
 
