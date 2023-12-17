@@ -44,7 +44,7 @@ def remove_consecutive_duplicates(cell):
 
 cleaned_df = merged_df.applymap(remove_consecutive_duplicates)
 
-# Replace numbers to numeric objects
+# Replace numbers to numeric objects and remove strings
 cleaned_df = cleaned_df.apply(pd.to_numeric, errors='coerce')
 
 # Replace values larger than 10 to NaN 
