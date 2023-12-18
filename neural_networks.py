@@ -1,3 +1,4 @@
+# < -------------------------------Import libraries-------------------------------------- >
 import pandas as pd 
 import time
 from helper import *
@@ -5,23 +6,17 @@ from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSe
 from sklearn.metrics import classification_report, accuracy_score, f1_score
 from sklearn.neural_network import MLPClassifier
 
-
-
-# Load dataset
+# < ---------------------------------Load dataset---------------------------------------- >
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
-
 X = df.drop(columns=['SURVEY_NAME'])
 y = df['SURVEY_NAME']
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-# Multilayer Perceptron tuning using GRIDSEARCH ==========================================>
-
-# MLP
+# < ---------------Multilayer Perceptron tuning using GRIDSEARCH------------------------- >
+# Define model
 mlp_classifier = MLPClassifier()
 
 # Define the hyperparameter grid to search
-
 params_mlp = {
     'hidden_layer_sizes': [(50, 50), (55, 55)],
     'activation': ['tanh', 'relu'],
@@ -60,9 +55,7 @@ print("MLP grid search\n","Accuracy: ", accuracy, "\n", "F1 score:", f1score)
 # Evaluate accuracy using classification_report function
 print("Classification Report:\n", classification_report(y_test, y_pred))
 
-
-# Multilayer Perceptron tuning using RANDOMIZEDSEARCH ==========================================>
-
+# < ---------------Multilayer Perceptron tuning using RANDOMIZEDSEARCH------------------- >
 # Create the random search object
 random_search = RandomizedSearchCV(mlp_classifier, params_mlp, cv=5, scoring=scoring_metrics, refit='f1_weighted', n_iter=10)
 
@@ -90,8 +83,7 @@ print("MLP random search\n","Accuracy: ", accuracy_rand, "\n", "F1 score:", f1sc
 print("Classification Report:\n", classification_report(y_test, y_pred_rand))
 
 
-
-# Multilayer Perceptron tuning using manual tuning ==========================================>
+# < ---------------Multilayer Perceptron tuning using manual tuning---------------------- >
 mlp_man = MLPClassifier(hidden_layer_sizes=(55, 55), max_iter=1000, random_state=42, beta_2=0.8, beta_1=0.8, solver='sgd', activation='relu', batch_size=32)
 
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
