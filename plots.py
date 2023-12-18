@@ -1,15 +1,14 @@
+# < -------------------------------Import libraries-------------------------------------- >
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc, accuracy_score, f1_score
-from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import SparsePCA
+from sklearn.decomposition import SparsePCA, PCA
 from sklearn.linear_model import LogisticRegression
-from sklearn.manifold import TSNE
-from sklearn.model_selection import GridSearchCV
 
 
+# < -----------------------------Define path to save plots------------------------------- >
 # Directory where the images will be saved
 path = "plots/"
 
@@ -19,6 +18,7 @@ font_size = 12
 # Set figures dimensions
 im_size = (8,6)
 
+# < -----------------------------------Load dataset-------------------------------------- >
 # Load dataset
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
 
@@ -29,7 +29,7 @@ y = df['SURVEY_NAME']
 # Separate data into training and testing
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-
+# < ----------------------------------SPARCE PCA----------------------------------------- >
 # Trying sparse PCA
 spca = SparsePCA(n_components=2)
 spca_result = spca.fit_transform(X_train)
@@ -45,10 +45,8 @@ plt.ylabel('Principal Component 2 (PC2)')
 plt.savefig(path + "pca_sparse.png")
 plt.show()
 
-
-
+# < --------------------------------------2D PCA----------------------------------------- >
 # Apply PCA to reduce the data to 2 dimensions
-
 pca = PCA(n_components=2)
 x_tr_PCA = pca.fit_transform(X_train)
 
@@ -77,9 +75,8 @@ plt.rc('font', size=18)
 plt.legend()
 plt.show()
 
-
-# Apply PCA to reduce the data to 2 dimensions
-pca = PCA(n_components = 3)
+# < ---------------------------------------3D PCA---------------------------------------- >
+pca = PCA(n_components = 10)
 x_tr_PCA = pca.fit_transform(X_train)
 
 # Explained variance ratio
@@ -112,13 +109,14 @@ ax2d = fig.add_axes([0, 0, 1, 1], zorder=-1)
 ax2d.set_axis_off()
 ax2d.legend([scatter1, scatter2], ['CUD', 'PTSD'], loc='upper left',  bbox_to_anchor=(0.8, 0.7))
 ax.set_yticks([-10, -5, 0, 5, 10])
-ax.set_yticklabels(['-10', '-5', '0', '5', '10'])  # Replace with your desired labels
+ax.set_yticklabels(['-10', '-5', '0', '5', '10']) 
 
-ax.w_xaxis.set_pane_color((1, 1, 1, 1.0))  # Adjust RGB and alpha as needed
+ax.w_xaxis.set_pane_color((1, 1, 1, 1.0)) 
 ax.w_yaxis.set_pane_color((1, 1, 1, 1.0))
 ax.w_zaxis.set_pane_color((1, 1, 1, 1.0))
 plt.show()
 
+# < ----------------------------Ratio of variance explained by PCs----------------------- >
 # Higher dimension PCA
 pca = PCA(n_components = 10)
 x_tr_PCA = pca.fit_transform(X_train)
@@ -127,7 +125,7 @@ x_tr_PCA = pca.fit_transform(X_train)
 explained_variance_ratio = pca.explained_variance_ratio_
 print("Explained Variance Ratio obtained with PCA:", explained_variance_ratio)
 
-
+# < -----------------------Visualize categorical vs. continuous features----------------- >
 # CATEGORICAL AND CONTINOUS FEATURES
 # Categorical headers keyword
 categorical_headers = ['REAKTION', 'MODALITAET', 'STRATEGIE', 'TRIGGER', 'STIMMUNG']
@@ -166,6 +164,7 @@ plt.savefig(path + "catcont.png")
 plt.rc('font', size=18)
 plt.show()
 
+# < ---------------------------------Visualize missing values---------------------------- >
 # Plots missing values 
 #Import df before nan removal
 df_nan = pd.read_csv('data/nan_data.csv', sep=";", header=0, index_col=0)
@@ -190,11 +189,9 @@ plt.show()
 features_nan = np.sum(nans > 15)
 print( features_nan , "% of features have a percentage of NaN higher than 15%. ")
 
+# < ---------------------------LOGISTIC REGRESSION WEIGHTS------------------------------- >
 # Plot weigths linear regression
-
-# Logistic Regression
-
-#Create the model
+# Create the model
 logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
 
 # Train the model
@@ -238,43 +235,8 @@ for indice in nonzero_indices:
 # Display features
 print(" Features with significant weights: ", features)
     
-# t-SNE =================================================================================>
-# Hyperparameters to try
-params_tsne = {
-    'perplexity': [5, 10, 20, 30, 40],
-    'learning_rate': [50, 100, 200],
-    'n_iter': [250, 500, 1000],
-}
 
-# Create t-SNE model
-tsne = TSNE(n_components=2)
-
-# Use GridSearchCV to perform the grid search
-grid_search = GridSearchCV(tsne, params_tsne, cv=3, scoring='f1_weighted', verbose=1)
-grid_search.fit(X, y)
-
-# Best hyperparams
-print("Best Hyperparameters:", grid_search.best_params_) # {'learning_rate': 50, 'n_iter': 250, 'perplexity': 5}
-
-# Visualize
-tsne = TSNE(learning_rate=50, n_iter=250, perplexity=5, random_state=42)
-X_tsne = tsne.fit_transform(X)
-
-# Create a scatter plot to visualize the reduced-dimensional data
-plt.figure(figsize=(8, 6))
-scatter = plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='viridis', edgecolors='k', alpha=0.7)
-plt.title('t-SNE Visualization')
-plt.colorbar(scatter, ticks=np.arange(3), label='Target Class')
-plt.show()
-
-# PAIRWISE PLOT ============================================================================>
-import seaborn as sns
-
-# Assuming X_train is your training set DataFrame
-sns.pairplot(X_train, hue='target_variable', diag_kind='kde')
-plt.show()
-
-# ROC CURVE ===============================================================================>
+# < -------------------------------------ROC CURVE--------------------------------------- >
 # Best decision threshold for Logistic Regression 
 logreg = LogisticRegression(C=1, penalty='l2')
 logreg.fit(X_train, y_train)
@@ -318,3 +280,18 @@ plt.title('Receiver Operating Characteristic (ROC) Curve')
 plt.savefig("plots/ROC_curve.png")
 plt.legend(loc='lower right')
 plt.show()
+
+# < -----------------------------Singular Value Decomposition---------------------------- >
+X_array = X.values
+
+# Perform Singular Value Decomposition (SVD)
+U, S, V = np.linalg.svd(X_array, full_matrices=False)
+
+# Convert the results back to DataFrames if needed
+U_df = pd.DataFrame(U, index=X.index, columns=[f'U_{i+1}' for i in range(U.shape[1])])
+S_df = pd.DataFrame(np.diag(S), index=[f'S_{i+1}' for i in range(S.shape[0])], columns=[f'S_{i+1}' for i in range(S.shape[0])])
+V_df = pd.DataFrame(V, index=[f'V_{i+1}' for i in range(V.shape[0])], columns=X.columns)
+
+
+rank = np.cumsum(S*S)/np.sum(S*S)
+print(rank[rank<0.95])
