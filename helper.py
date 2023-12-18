@@ -113,3 +113,29 @@ def logistic(X_train, X_test, y_train, y_test):
     accuracy_lr = accuracy_score(y_test, y_pred_lr)
     f1score_lr = f1_score(y_test, y_pred_lr)
     print("LR with outliers\n","Accuracy: ", accuracy_lr, "\n", "F1 score :", f1score_lr) 
+
+def model_performance(model, X_test, y_test, CV=True):
+    """
+    Given a model and a test set, this method makes predictions and print the accuracy, f1 score and, if a cross-
+    validation was performed, the best parameters of the model.
+
+    Parameters:
+    - model : the model to use to make the predictions
+    - X_test (array-like): Testing features.
+    - y_test (array-like): Testing labels.
+    - CV (Bool) : indicates whether the model has been tuned with cross-validation. By default: True
+
+    """
+    if CV:
+        best_model = model.best_estimator_
+        y_pred = best_model.predict(X_test)
+        best_parameters = model.best_params_
+        accuracy = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        print("Accuracy: ", accuracy, "\n", "F1 score :", f1, "\n", "Best parameters :", best_parameters) 
+    else:
+        y_pred = model.predict(X_test)
+        accuracy = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        print("Accuracy: ", accuracy, "\n", "F1 score :", f1, "\n") 
+

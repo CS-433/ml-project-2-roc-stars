@@ -1,91 +1,78 @@
 import pandas as pd 
 from helper import *
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.mixture import GaussianMixture
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.neural_network import MLPClassifier
-from sklearn.mixture import GaussianMixture
-from sklearn.metrics import classification_report
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.svm import SVC
-
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
 # Load dataset
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
+# Insert bias term
+df.insert(0, 'Bias', 1)
 
+# Separate inputs and target
 X = df.drop(columns=['SURVEY_NAME'])
 y = df['SURVEY_NAME']
 
+# Feature augmentation (polynomial)
+poly = PolynomialFeatures(degree=2, interaction_only=True)
+X_poly = poly.fit_transform(X)
+X_poly_df = pd.DataFrame(X_poly)
+X_poly_df.columns = X_poly_df.columns.astype(str)
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+X_train_poly, X_test_poly, y_train_poly, y_test_poly = train_test_split(X_poly, y, test_size=0.2, random_state=0)
 
 # LOGISTIC REGRESSION ====================================================================>
 # Hyperparameters to try
 params_lr = {
     'C': [0.001, 0.01, 0.1, 1, 10, 100], 
-    'penalty': ['l1','l2']
+    'penalty': ['l2', None]
 }
-
 # Model definition
-logreg_model = LogisticRegression(random_state=42, max_iter=1000)
+logreg_model = LogisticRegression(random_state=42, max_iter=3000)
 
-# Tuning and fitting using Grid Search
 grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='f1_weighted')
 grid_search.fit(X_train, y_train)
 
-# Best hyperparams
-best_params_lr = grid_search.best_params_
-print(best_params_lr) # C = 1, penalty='l2'
-
-# Assess accuracy and f1 score
-best_lr_model = grid_search.best_estimator_
-y_pred_lr = best_lr_model.predict(X_test)
-accuracy_lr = accuracy_score(y_test, y_pred_lr)
-f1score_lr = f1_score(y_test, y_pred_lr)
-print("Classification Report:\n", classification_report(y_test, y_pred_lr))
-print("LR\n","Accuracy: ", accuracy_lr, "\n", "F1 score :", f1score_lr) 
+model_performance(grid_search, X_test, y_test)
 # Accuracy:  0.867816091954023 
 # F1 score : 0.816
 
-# Gaussian Mixture Matrix ====================================================================>
-gmm_model = GaussianMixture(n_components=2, random_state=42)
-gmm_model.fit(X_train)
-y_pred_gmm = gmm_model.predict(X_test)
+# LOGISTIC REGRESSION with feature augmentation ===============================================>
+logreg_poly = LogisticRegression(random_state=42, penalty='l2', C=0.01, max_iter=2000)
+logreg_poly.fit(X_train_poly, y_train_poly)
+model_performance(logreg_poly, X_test_poly, y_test_poly, CV=False)
+# Accuracy: 0.862
+# F1 score: 0.809
 
-print("Classification Report:\n", classification_report(y_test, y_pred_gmm))
-f1score = f1_score(y_test, y_pred_gmm)
-print("GMM f1 score: ", f1score) # 0.14184397163120568
 
-# Random Forest Classifier ====================================================================>
+# RANDOM FOREST CLASSIFIER ====================================================================>
+# Hyperparameters to try
 param_grid = {
     'n_estimators': [50, 100, 200, 300],
     'max_depth': [None, 10, 20, 30],
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4]
 }
-
+# Model definition
 rf_classifier = RandomForestClassifier(random_state=42)
-grid_search = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv=5, scoring='accuracy')
-grid_search.fit(X_train, y_train)
 
-best_params = grid_search.best_params_
-best_rf_model = grid_search.best_estimator_
-y_pred_rf = best_rf_model.predict(X_test)
+grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv=5, scoring='accuracy')
+grid_search_rf.fit(X_train, y_train)
 
-# Evaluate the accuracy of the best model
-accuracy_rf = accuracy_score(y_test, y_pred_rf)
-f1_rf = f1_score(y_test, y_pred_rf)
-print(f"Best Parameters: {best_params}")
-print(f"Best Model Accuracy: {accuracy_rf}")
-print(f"Best Model F1 score: {f1_rf}")
+model_performance(grid_search_rf, X_test, y_test)
 
-# Gradient boost ====================================================================>
-gb_classifier = GradientBoostingClassifier(random_state=42)
 
+# GRADIENT BOOST ====================================================================>
+# Hyperparameters to try
 param_grid_gb = {
     'n_estimators': [50, 100, 200],
     'learning_rate': [0.01, 0.1, 0.2],
@@ -93,42 +80,29 @@ param_grid_gb = {
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4]
 }
-
-grid_search_gb = GridSearchCV(gb_classifier, param_grid_gb, cv=5, scoring='accuracy')
+# Model definition
+gb_classifier = GradientBoostingClassifier(random_state=42)
+grid_search_gb = GridSearchCV(gb_classifier, param_grid_gb, cv=5, scoring='f1_weighted')
 grid_search_gb.fit(X_train, y_train)
 
-best_gb_model = grid_search_gb.best_estimator_
-y_pred_gb = best_gb_model.predict(X_test)
-
-# Evaluate the accuracy of the best model
-accuracy_gb = accuracy_score(y_test, y_pred_gb)
-f1_gb = f1_score(y_test, y_pred_gb)
-print("Best Hyperparameters:", grid_search_gb.best_params_)
-print("Accuracy on Test Set:", accuracy_gb)
-print("F1 score on Test Set:", f1_gb) 
+model_performance(grid_search_gb, X_test, y_test)
 
 
-# Polynomial Classification ====================================================================>
-poly_svm = make_pipeline(PolynomialFeatures(), SVC())
-
+# POLYNOMIAL CLASSIFICATION ====================================================================>
+# Hyperparameters to try
 param_grid_poly = {
     'polynomialfeatures__degree': [2, 3],
     'svc__C': [0.1, 1, 10],
     'svc__gamma': [0.1, 1, 'scale', 'auto'],
 }
+# Model definition
+poly_svm = make_pipeline(PolynomialFeatures(), SVC())
 
-grid_search_poly = GridSearchCV(estimator=poly_svm, param_grid=param_grid_poly, cv=5, scoring='accuracy')
+grid_search_poly = GridSearchCV(estimator=poly_svm, param_grid=param_grid_poly, cv=5, scoring='f1_weighted')
 grid_search_poly.fit(X_train, y_train)
 
-best_params_poly = grid_search_poly.best_params_
-best_poly_svm_model = grid_search_poly.best_estimator_
-y_pred_poly = best_poly_svm_model.predict(X_test)
+model_performance(grid_search_poly, X_test, y_test)
 
-accuracy_poly = accuracy_score(y_test, y_pred_poly)
-f1_poly = f1_score(y_test, y_pred_poly)
-print(f"Best Parameters: {best_params_poly}")
-print(f"Best Model Accuracy: {accuracy_poly}")
-print(f"Best Model F1 score: {f1_poly}")
 
 # K NEAREST NEIGHBORS ====================================================================>
 # Hyperparameters to try
@@ -136,26 +110,17 @@ params_knn = {
     'n_neighbors': [2, 3, 5, 7, 9, 15], 
     'metric': ['euclidean', 'manhattan', 'minkowski']
 }
-
 # Model definition
 knn = KNeighborsClassifier()
 
-# Tuning and fitting using Grid Search
-grid_search = GridSearchCV(knn, params_knn, cv=5, scoring='f1_weighted')
-grid_search.fit(X_train, y_train)
+grid_search_knn = GridSearchCV(knn, params_knn, cv=5, scoring='f1_weighted')
+grid_search_knn.fit(X_train, y_train)
 
-# Best hyperparams
-best_params_knn = grid_search.best_params_
-print("Best Parameters:", best_params_knn) # {'metric': 'manhattan', 'n_neighbors': 9}
-
-# Assess accuracy and f1 score
-best_knn_model = grid_search.best_estimator_
-y_pred_knn = best_knn_model.predict(X_test)
-accuracy_knn = accuracy_score(y_test, y_pred_knn)
-f1score_knn = f1_score(y_test, y_pred_knn)
-print("KNN\n","Accuracy: ", accuracy_knn, "\n", "F1 score :", f1score_knn)
+model_performance(grid_search_knn, X_test, y_test)
+# {'metric': 'manhattan', 'n_neighbors': 9}
 # Accuracy:  0.8103448275862069 
 # F1 score : 0.7027027027027027
+
 
 # SUPPORT VECTOR MACHINE ====================================================================>
 # Hyperparameters to try
@@ -164,24 +129,14 @@ params_svm = {
     'kernel': ['linear', 'rbf', 'poly'],
     'gamma': ['scale', 'auto'] 
 }
-
 # Model definition
 svm_classifier = SVC()
 
-# Tuning and fitting using Grid Search
-grid_search = GridSearchCV(svm_classifier, params_svm, cv=5, scoring='f1_weighted')
-grid_search.fit(X_train, y_train)
+grid_search_svm = GridSearchCV(svm_classifier, params_svm, cv=5, scoring='f1_weighted')
+grid_search_svm.fit(X_train, y_train)
 
-# Best hyperparams
-best_params_svm = grid_search.best_params_
-print("Best Parameters:", best_params_svm) # {'C': 1, 'gamma': 'auto', 'kernel': 'poly'}
-
-# Assess accuracy and f1 score
-best_svm_model = grid_search.best_estimator_
-y_pred_svm = best_svm_model.predict(X_test)
-accuracy_svm = accuracy_score(y_test, y_pred_svm)
-f1score_svm = f1_score(y_test, y_pred_svm)
-print("SVM\n","Accuracy: ", accuracy_svm, "\n", "F1 score :", f1score_svm)
+model_performance(grid_search_svm, X_test, y_test)
+# {'C': 1, 'gamma': 'auto', 'kernel': 'poly'}
 # Accuracy:  0.8390804597701149 
 # F1 score : 0.7741935483870969
 
@@ -192,22 +147,33 @@ params_gmm = {
     'n_components': [2, 3, 4, 5], 
     'covariance_type': ['full', 'tied', 'diag', 'spherical']
 }
-
 # Model definition
 gmm = GaussianMixture()
 
-# Tuning and fitting using Grid Search
-grid_search = GridSearchCV(gmm, params_gmm, cv=5, scoring='f1_weighted')  
-grid_search.fit(X_train, y_train)  # Note: y_train is not used for GMM
+grid_search_gmm = GridSearchCV(gmm, params_gmm, cv=5, scoring='f1_weighted')  
+grid_search_gmm.fit(X_train, y_train)  # Note: y_train is not used for GMM
 
-# Best hyperparams
-best_params = grid_search.best_params_
-print("Best Parameters:", best_params) # {'covariance_type': 'diag', 'n_components': 2}
-
-# Assess accuracy and f1 score
-y_pred_gmm = grid_search.predict(X_test)
-accuracy_gmm = accuracy_score(y_test, y_pred_gmm)
-f1score_gmm = f1_score(y_test, y_pred_gmm)
-print("GMM\n","Accuracy: ", accuracy_gmm, "\n", "F1 score :", f1score_gmm)
+model_performance(grid_search_gmm, X_test, y_test)
+# {'covariance_type': 'diag', 'n_components': 2}
 # Accuracy:  0.7988505747126436 
 # F1 score : 0.6846846846846846
+
+
+# GAUSSIAN PROCESS CLASSIFIER ===========================================>
+# Hyperparameters to try
+param_grid_gpc = {
+    'kernel': [C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-2, 1e2))],
+    'optimizer': ['fmin_l_bfgs_b'],
+    'n_restarts_optimizer': [0, 1, 2],
+    'max_iter_predict': [100, 200, 300],
+}
+# Model definition
+gpc = GaussianProcessClassifier(random_state=42)
+
+grid_search_gpc = GridSearchCV(gpc, param_grid=param_grid_gpc, cv=5)
+grid_search_gpc.fit(X_train, y_train)
+
+model_performance(grid_search_gpc, X_test, y_test)
+# Accuracy = 0.868
+# F1 = 0.819
+# {'kernel': 1**2 * RBF(length_scale=1), 'max_iter_predict': 100, 'n_restarts_optimizer': 0, 'optimizer': 'fmin_l_bfgs_b'}
