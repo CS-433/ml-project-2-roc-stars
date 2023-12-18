@@ -1,9 +1,12 @@
+# < -------------------------------Import libraries-------------------------------------- >
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+
+# < -----------------------------------Functions----------------------------------------- >
 
 def convert_int_columns_to_int(df):
     """
@@ -116,7 +119,6 @@ def logistic(X_train, X_test, y_train, y_test):
     f1score_lr = f1_score(y_test, y_pred_lr)
     print("LR with outliers\n","Accuracy: ", accuracy_lr, "\n", "F1 score :", f1score_lr) 
 
-<<<<<<< HEAD
 def model_performance(model, X_test, y_test, CV=True):
     """
     Given a model and a test set, this method makes predictions and print the accuracy, f1 score and, if a cross-
@@ -142,7 +144,6 @@ def model_performance(model, X_test, y_test, CV=True):
         f1 = f1_score(y_test, y_pred)
         print("Accuracy: ", accuracy, "\n", "F1 score :", f1, "\n") 
 
-=======
 def remove_consecutive_duplicates(cell):
     """
     Remove consecutive duplicates from a space-separated string of words.
@@ -275,4 +276,3 @@ def clean(df_raw):
     final_df = filled_df[high_std_columns]
     
     return final_df
->>>>>>> origin/debranchez-moi
