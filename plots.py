@@ -201,20 +201,24 @@ logreg_model.fit(X_train, y_train)
 y_pred_logreg = logreg_model.predict(X_test)
 
 # Display the weights
-weights = logreg_model.coef_
-intercept = logreg_model.intercept_ # maybe it could also bring smth to look at the intercept
-
-# Display the weights
-weights = logreg_model.coef_[0]  # Assuming binary classification, so there is only one set of weights
+weights = logreg_model.coef_[0]  
 intercept = logreg_model.intercept_
 
-# Selects significant weights
-weights[np.abs(weights) < 0.5] = 0
+# Extracting the norm of the weights
+weights = np.abs(weights)
 
-# Get the indices of non-zero elements
-nonzero_indices = np.nonzero(weights)[0]
+# Plot weights norm histogram
+plt.figure(figsize=im_size) 
+plt.hist(weights, bins=10, color='skyblue')
+plt.xlabel('Weight')
+plt.ylabel('Frequency')
+plt.title('Histogram of Weights')
+plt.savefig(path + "histogram_weights")
+plt.show()
 
-# Plot the norm of the weights
+# Plot the norm of the weights 
+plt.figure(figsize=im_size) 
+plt.axhline(y=0.5, color='red', linestyle='--', label='Dotted Line at x=3')
 plt.bar(range(len(weights)), weights)
 plt.xlabel('Feature Index')
 plt.ylabel('Norm of Weights')
@@ -222,8 +226,23 @@ plt.title('Norm of Weights in Logistic Regression')
 plt.savefig(path + "weights.png")
 plt.show()
 
-# Find inidices with significant weights
-nonzero_indiced = np.nonzero(weights)
+# Selects significant weights
+weights[np.abs(weights) < 0.5] = 0
+
+# Get the indices of signicant elements
+nonzero_indices = np.nonzero(weights)[0]
+
+# Extract corresponding weights
+nonzero_weights = weights[nonzero_indices]
+
+# Plot the norm of the significant weights
+plt.figure(figsize= im_size) 
+plt.bar(range(len(weights)), weights)
+plt.xlabel('Feature Index')
+plt.ylabel('Norm of Weights')
+plt.title('Norm of Weights in Logistic Regression')
+plt.savefig(path + "significant_weights.png")
+plt.show()
 
 # Initialize feature vector
 features = []
@@ -238,7 +257,7 @@ print(" Features with significant weights: ", features)
 
 # < -------------------------------------ROC CURVE--------------------------------------- >
 # Best decision threshold for Logistic Regression 
-logreg = LogisticRegression(C=1, penalty='l2')
+logreg = LogisticRegression(C=1, penalty='l2', max_iter=1000)
 logreg.fit(X_train, y_train)
 thrs = np.linspace(0.2,0.8,13)
 accs = []
@@ -295,3 +314,4 @@ V_df = pd.DataFrame(V, index=[f'V_{i+1}' for i in range(V.shape[0])], columns=X.
 
 rank = np.cumsum(S*S)/np.sum(S*S)
 print(rank[rank<0.95])
+
