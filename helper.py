@@ -105,7 +105,7 @@ def logistic(X_train, X_test, y_train, y_test):
 
     # WITH OUTLIERS
     # Tuning and fitting using Grid Search
-    grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='f1_weighted')
+    grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
     grid_search.fit(X_train, y_train)
 
     # Best hyperparams
@@ -245,23 +245,26 @@ def clean(df_raw):
     selected_columns = nan_percentage[nan_percentage <= nan_perc_limit].index
     cleaned_df = cleaned_df[selected_columns]
 
+    # Add target column at the end of dataset
     cleaned_df = pd.concat([cleaned_df, labels], axis = 1)
 
     # Drop rows with 80% or more empty values
     threshold = 0.8
     cleaned_df_filtered = cleaned_df.dropna(thresh=int(cleaned_df.shape[1] * (1 - threshold)))
-
     new_labels = cleaned_df_filtered['SURVEY_NAME']
 
     # Separate continuous and binary columns to handle NaN values
     continuous_df = cleaned_df_filtered.loc[:, ~cleaned_df_filtered.columns.str.endswith(tuple(map(str, range(10)))) & (cleaned_df_filtered.columns != 'SURVEY_NAME')]
     continuous_df.fillna(continuous_df.median(), inplace=True)
+
+    binary_df = cleaned_df_filtered.loc[:, cleaned_df_filtered.columns.str.endswith(tuple(map(str, range(10))))]
+    binary_df[binary_df.columns] = binary_df[binary_df.columns].apply(lambda x: x.fillna(x.mode().iloc[0]))
     
     # Standardize continuous columns
     scaler = StandardScaler()
     continuous_df[continuous_df.columns] = scaler.fit_transform(continuous_df[continuous_df.columns])
-    binary_df = cleaned_df_filtered.loc[:, cleaned_df_filtered.columns.str.endswith(tuple(map(str, range(10))))]
-    binary_df[binary_df.columns] = binary_df[binary_df.columns].apply(lambda x: x.fillna(x.mode().iloc[0]))
+    
+    # Regroup continous, binary columns and labels
     filled_df = pd.concat([continuous_df, binary_df, new_labels], axis = 1)
 
     # Assess smallest std features for report

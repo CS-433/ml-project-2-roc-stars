@@ -27,6 +27,9 @@ poly = PolynomialFeatures(degree=2, interaction_only=True)
 X_poly = poly.fit_transform(X)
 X_poly_df = pd.DataFrame(X_poly)
 X_poly_df.columns = X_poly_df.columns.astype(str)
+
+# < ----------------------------------Split Dataset------------------------------------ >
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 X_train_poly, X_test_poly, y_train_poly, y_test_poly = train_test_split(X_poly, y, test_size=0.2, random_state=0)
 
@@ -39,7 +42,7 @@ params_lr = {
 
 # Model definition
 logreg_model = LogisticRegression(random_state=42, max_iter=3000)
-grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='f1_weighted')
+grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
 grid_search.fit(X_train, y_train)
 model_performance(grid_search, X_test, y_test)
 
@@ -62,7 +65,7 @@ grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv
 grid_search_rf.fit(X_train, y_train)
 model_performance(grid_search_rf, X_test, y_test)
 
-# < --------------------------------Gradient Boost--------------------------------------- >
+# < --------------------------------Gradient Boosting--------------------------------------- >
 # Hyperparameters to try
 param_grid_gb = {
     'n_estimators': [50, 100, 200],
@@ -73,11 +76,11 @@ param_grid_gb = {
 }
 # Model definition
 gb_classifier = GradientBoostingClassifier(random_state=42)
-grid_search_gb = GridSearchCV(gb_classifier, param_grid_gb, cv=5, scoring='f1_weighted')
+grid_search_gb = GridSearchCV(gb_classifier, param_grid_gb, cv=5, scoring='accuracy')
 grid_search_gb.fit(X_train, y_train)
 model_performance(grid_search_gb, X_test, y_test)
 
-# < ----------------------------Polynomial Classification-------------------------------- >
+# < ----------------------------Polynomial SVM Classification-------------------------------- >
 # Hyperparameters to try
 param_grid_poly = {
     'polynomialfeatures__degree': [2, 3],
@@ -86,7 +89,7 @@ param_grid_poly = {
 }
 # Model definition
 poly_svm = make_pipeline(PolynomialFeatures(), SVC())
-grid_search_poly = GridSearchCV(estimator=poly_svm, param_grid=param_grid_poly, cv=5, scoring='f1_weighted')
+grid_search_poly = GridSearchCV(estimator=poly_svm, param_grid=param_grid_poly, cv=5, scoring='accuracy')
 grid_search_poly.fit(X_train, y_train)
 model_performance(grid_search_poly, X_test, y_test)
 
@@ -98,7 +101,7 @@ params_knn = {
 }
 # Model definition
 knn = KNeighborsClassifier()
-grid_search_knn = GridSearchCV(knn, params_knn, cv=5, scoring='f1_weighted')
+grid_search_knn = GridSearchCV(knn, params_knn, cv=5, scoring='accuracy')
 grid_search_knn.fit(X_train, y_train)
 model_performance(grid_search_knn, X_test, y_test)
 # {'metric': 'manhattan', 'n_neighbors': 9}
@@ -112,7 +115,7 @@ params_svm = {
 }
 # Model definition
 svm_classifier = SVC()
-grid_search_svm = GridSearchCV(svm_classifier, params_svm, cv=5, scoring='f1_weighted')
+grid_search_svm = GridSearchCV(svm_classifier, params_svm, cv=5, scoring='accuracy')
 grid_search_svm.fit(X_train, y_train)
 model_performance(grid_search_svm, X_test, y_test)
 # {'C': 1, 'gamma': 'auto', 'kernel': 'poly'}
@@ -126,7 +129,7 @@ params_gmm = {
 # Model definition
 gmm = GaussianMixture()
 
-grid_search_gmm = GridSearchCV(gmm, params_gmm, cv=5, scoring='f1_weighted')  
+grid_search_gmm = GridSearchCV(gmm, params_gmm, cv=5, scoring='accuracy')  
 grid_search_gmm.fit(X_train, y_train)  # Note: y_train is not used for GMM
 
 model_performance(grid_search_gmm, X_test, y_test)
@@ -142,7 +145,7 @@ param_grid_gpc = {
 }
 # Model definition
 gpc = GaussianProcessClassifier(random_state=42)
-grid_search_gpc = GridSearchCV(gpc, param_grid=param_grid_gpc, cv=5)
+grid_search_gpc = GridSearchCV(gpc, param_grid=param_grid_gpc, cv=5, scoring='accuracy')
 grid_search_gpc.fit(X_train, y_train)
 model_performance(grid_search_gpc, X_test, y_test)
 # {'kernel': 1**2 * RBF(length_scale=1), 'max_iter_predict': 100, 'n_restarts_optimizer': 0, 'optimizer': 'fmin_l_bfgs_b'}
