@@ -9,8 +9,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
 # < ------------------------------------Load data---------------------------------------- >
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
@@ -134,18 +132,3 @@ grid_search_gmm.fit(X_train, y_train)  # Note: y_train is not used for GMM
 
 model_performance(grid_search_gmm, X_test, y_test)
 # {'covariance_type': 'diag', 'n_components': 2}
-
-# < -----------------------------Gaussian Process Classifier----------------------------- >
-# Hyperparameters to try
-param_grid_gpc = {
-    'kernel': [C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-2, 1e2))],
-    'optimizer': ['fmin_l_bfgs_b'],
-    'n_restarts_optimizer': [0, 1, 2],
-    'max_iter_predict': [100, 200, 300],
-}
-# Model definition
-gpc = GaussianProcessClassifier(random_state=42)
-grid_search_gpc = GridSearchCV(gpc, param_grid=param_grid_gpc, cv=5, scoring='accuracy')
-grid_search_gpc.fit(X_train, y_train)
-model_performance(grid_search_gpc, X_test, y_test)
-# {'kernel': 1**2 * RBF(length_scale=1), 'max_iter_predict': 100, 'n_restarts_optimizer': 0, 'optimizer': 'fmin_l_bfgs_b'}
