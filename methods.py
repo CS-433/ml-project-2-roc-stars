@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 
 # < ------------------------------------Load data---------------------------------------- >
-df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
+df = pd.read_csv('Datasets/final_data.csv', sep=";", header=0, index_col=0)
 # Insert bias term
 df.insert(0, 'Bias', 1)
 

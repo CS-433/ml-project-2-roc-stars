@@ -14,7 +14,7 @@ path = "plots/"
 
 # < -----------------------------------Load dataset-------------------------------------- >
 # Load dataset
-df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
+df = pd.read_csv('Datasets/final_data.csv', sep=";", header=0, index_col=0)
 
 # Separate X from prediction y
 X = df.drop(columns=['SURVEY_NAME'])

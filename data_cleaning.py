@@ -8,5 +8,5 @@ df_raw = pd.read_csv('data/EMemory_data.csv', sep=";", header=0)
 # < --------------------------------------Run--------------------------------------------->
 # Create clean dataframe
 final_df = clean(df_raw)
-final_df.to_csv('final_data.csv', sep = ';')
+final_df.to_csv('Datasets/final_data.csv', sep = ';')
 # < -------------------------------------------------------------------------------------->
