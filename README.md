@@ -5,7 +5,7 @@ We have data of 1001 individuals and over 600 features.
 This is a classification problem. 
 
 
-The projet is done under the supervision Dr. Lina Dietker at the Experimentelle Psychopathologie und Psychotherapie laboratory at the University of Zurich.
+The project is done under the supervision Dr. Lina Dietker at the Experimentelle Psychopathologie und Psychotherapie laboratory at the University of Zurich.
 
 
 ## Code structure
