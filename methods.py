@@ -48,7 +48,7 @@ grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv
 grid_search_rf.fit(X_train, y_train)
 model_performance(grid_search_rf, X_test, y_test)
 
-# < --------------------------------Gradient Boosting--------------------------------------- >
+# < --------------------------------Gradient Boosting------------------------------------ >
 # Hyperparameters to try
 param_grid_gb = {
     'n_estimators': [50, 100, 200],
