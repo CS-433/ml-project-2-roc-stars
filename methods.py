@@ -7,8 +7,6 @@ from sklearn.mixture import GaussianMixture
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import PolynomialFeatures
 
 # < ------------------------------------Load data---------------------------------------- >
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
@@ -19,17 +17,9 @@ df.insert(0, 'Bias', 1)
 X = df.drop(columns=['SURVEY_NAME'])
 y = df['SURVEY_NAME']
 
-# < -------------------------------Feature Agumentation---------------------------------- >
-# Feature augmentation (polynomial)
-poly = PolynomialFeatures(degree=2, interaction_only=True)
-X_poly = poly.fit_transform(X)
-X_poly_df = pd.DataFrame(X_poly)
-X_poly_df.columns = X_poly_df.columns.astype(str)
-
 # < ----------------------------------Split Dataset------------------------------------ >
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-X_train_poly, X_test_poly, y_train_poly, y_test_poly = train_test_split(X_poly, y, test_size=0.2, random_state=0)
 
 # < --------------------------------Logistic Regression---------------------------------- >
 # Hyperparameters to try
@@ -43,11 +33,6 @@ logreg_model = LogisticRegression(random_state=42, max_iter=3000)
 grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
 grid_search.fit(X_train, y_train)
 model_performance(grid_search, X_test, y_test)
-
-# < --------------------Logistic Regression with feature augmentation-------------------- >
-logreg_poly = LogisticRegression(random_state=42, penalty='l2', C=0.01, max_iter=2000)
-logreg_poly.fit(X_train_poly, y_train_poly)
-model_performance(logreg_poly, X_test_poly, y_test_poly, CV=False)
 
 # < --------------------------------Random Forest Classifier----------------------------- >
 # Hyperparameters to try
@@ -77,19 +62,6 @@ gb_classifier = GradientBoostingClassifier(random_state=42)
 grid_search_gb = GridSearchCV(gb_classifier, param_grid_gb, cv=5, scoring='accuracy')
 grid_search_gb.fit(X_train, y_train)
 model_performance(grid_search_gb, X_test, y_test)
-
-# < ----------------------------Polynomial SVM Classification-------------------------------- >
-# Hyperparameters to try
-param_grid_poly = {
-    'polynomialfeatures__degree': [2, 3],
-    'svc__C': [0.1, 1, 10],
-    'svc__gamma': [0.1, 1, 'scale', 'auto'],
-}
-# Model definition
-poly_svm = make_pipeline(PolynomialFeatures(), SVC())
-grid_search_poly = GridSearchCV(estimator=poly_svm, param_grid=param_grid_poly, cv=5, scoring='accuracy')
-grid_search_poly.fit(X_train, y_train)
-model_performance(grid_search_poly, X_test, y_test)
 
 # < --------------------------------K Nearest Neighbors---------------------------------- >
 # Hyperparameters to try

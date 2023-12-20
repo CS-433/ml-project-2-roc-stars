@@ -74,50 +74,6 @@ def remove_outliers(X, iqr_multiplier=1.5):
 
     return X_array
 
-def logistic(X_train, X_test, y_train, y_test):
-    """
-    Train a Logistic Regression model using Grid Search for hyperparameter tuning and evaluate its performance.
-    This function's sole purpose is to assess whether outliers removal improves performance or not, c.f. file outliers.py for implementation.
-
-    Parameters:
-    - X_train (array-like): Training features.
-    - X_test (array-like): Testing features.
-    - y_train (array-like): Training labels.
-    - y_test (array-like): Testing labels.
-
-    Returns:
-    - dict: Dictionary containing the best hyperparameters and performance metrics.
-
-    Notes:
-    - The model is trained with hyperparameter tuning using Grid Search.
-    - The hyperparameters considered are 'C' (inverse regularization strength) and 'penalty'.
-    - The model is evaluated on the provided test set.
-    - Performance metrics include accuracy and F1 score.
-    """
-    # Hyperparameters to try
-    params_lr = {
-        'C': [0.001, 0.01, 0.1, 1, 10, 100], 
-        'penalty': ['l1', 'l2'], 
-    }
-
-    # Model definition
-    logreg_model = LogisticRegression(random_state=42, max_iter=1000)
-
-    # WITH OUTLIERS
-    # Tuning and fitting using Grid Search
-    grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
-    grid_search.fit(X_train, y_train)
-
-    # Best hyperparams
-    best_params_lr = grid_search.best_params_
-    print(best_params_lr) # C = 1, penalty='l2'
-
-    # Assess accuracy and f1 score on X_test_nout
-    best_lr_model = grid_search.best_estimator_
-    y_pred_lr = best_lr_model.predict(X_test)
-    accuracy_lr = accuracy_score(y_test, y_pred_lr)
-    f1score_lr = f1_score(y_test, y_pred_lr)
-    print("LR with outliers\n","Accuracy: ", accuracy_lr, "\n", "F1 score :", f1score_lr) 
 
 def model_performance(model, X_test, y_test, CV=True):
     """
@@ -263,7 +219,7 @@ def clean(df_raw):
     # Standardize continuous columns
     scaler = StandardScaler()
     continuous_df[continuous_df.columns] = scaler.fit_transform(continuous_df[continuous_df.columns])
-    
+
     # Regroup continous, binary columns and labels
     filled_df = pd.concat([continuous_df, binary_df, new_labels], axis = 1)
 
