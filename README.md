@@ -2,7 +2,7 @@
 In this machine learning project, we want to forecast the diagnostic group of patients from their intrusion memories characteristics. 
 The two diagnostic groups are Post-Traumatic Stress Disorder (PTSD) and Cocaine Use Disorder (CUD). 
 We have data of 1001 individuals and over 600 features. 
-This is a classification problem. \\
+This is a classification problem. \
 The projet is done under the supervision Dr. Lina Dietker at the Experimentelle Psychopathologie und Psychotherapie laboratory at the University of Zurich.
 
 
