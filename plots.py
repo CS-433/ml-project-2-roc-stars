@@ -12,12 +12,6 @@ from sklearn.linear_model import LogisticRegression
 # Directory where the images will be saved
 path = "plots/"
 
-# Set figures fontisze
-font_size = 12
-
-# Set figures dimensions
-im_size = (8,6)
-
 # < -----------------------------------Load dataset-------------------------------------- >
 # Load dataset
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
@@ -76,21 +70,19 @@ plt.legend()
 plt.show()
 
 # < ---------------------------------------3D PCA---------------------------------------- >
-pca = PCA(n_components = 10)
+# Plot the 3D PCA result with colored points
+pca = PCA(n_components=3)
 x_tr_PCA = pca.fit_transform(X_train)
 
-# Explained variance ratio
-explained_variance_ratio = pca.explained_variance_ratio_
-print("Explained Variance Ratio obtained with PCA:", explained_variance_ratio)
-
-# Plot the 3D PCA result with colored points
+# Define colors for each label
+label_colors = {0: 'red', 1: 'green'} 
 ind_CUD = np.where(y_train == 0)
 ind_PTSD = np.where(y_train == 1)
 x_tr_PCA_CUD = x_tr_PCA[ind_CUD]
 x_tr_PCA_PTSD = x_tr_PCA[ind_PTSD]
 
 axis_fontsize = 10
-fig = plt.figure(figsize=(8,6))
+fig = plt.figure(figsize=(10,10))
 ax = fig.add_subplot(111, projection='3d')
 x = x_tr_PCA_CUD[:, 0]
 y = x_tr_PCA_CUD[:, 1]
@@ -155,11 +147,11 @@ print(" Ratio categorical features: ", categorical_ratio )
 
 
 # Plots categorical vs continuous features
-plt.figure(figsize=im_size) 
+plt.figure(figsize=(8,6))
 plt.bar(types, ratios, color='grey', width=0.5)
-plt.ylabel("Ratio", fontsize=font_size)
+plt.ylabel("Ratio", fontsize=30)
 plt.ylim(0,1)
-plt.xticks(types, ["Continuous", "Categorical"], fontsize=font_size)
+plt.xticks(types, ["Continuous", "Categorical"], fontsize=30)
 plt.savefig(path + "catcont.png")
 plt.rc('font', size=18)
 plt.show()
@@ -177,10 +169,10 @@ nans = df_nan.values
 features = np.arange(1, len(nans)+1)
 
 # Plot NaN ratio
-plt.figure(figsize=(8, 6)) 
+plt.figure(figsize=(10, 8)) 
 plt.bar(features, nans, color='orange')
-plt.xlabel("Feature number", fontsize=font_size)
-plt.ylabel("Ratio of NaN values", fontsize=font_size)
+plt.xlabel("Feature number", fontsize=30)
+plt.ylabel("Ratio of NaN values", fontsize=30)
 plt.savefig(path + "nan.png")
 plt.rc('font', size=18)
 plt.show()
@@ -189,6 +181,21 @@ plt.show()
 features_nan = np.sum(nans > 15)
 print( features_nan , "% of features have a percentage of NaN higher than 15%. ")
 
+# < -------------------------------------Risk Status------------------------------------- >
+ptsd_count = sum(y == 0)
+cud_count = sum(y == 1)
+total = len(y)
+ratios = [ptsd_count/total, cud_count/total]
+types = ['PTSD', 'CUD']
+plt.figure(figsize=(8, 6))
+plt.bar(types, ratios, color='green', width=0.5)
+plt.ylabel("Count", fontsize=30)  
+plt.ylim(0, 1) 
+plt.xticks(fontsize=30)  
+plt.savefig(path + "bias.png")
+plt.rc('font', size=30)
+plt.yticks(fontsize=18)
+plt.show()
 # < ---------------------------LOGISTIC REGRESSION WEIGHTS------------------------------- >
 # Plot weigths linear regression
 # Create the model
