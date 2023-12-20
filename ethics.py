@@ -23,7 +23,6 @@ plt.xlabel('Age', fontsize=30)
 plt.ylabel('Count', fontsize=30)
 plt.xticks([(bins[i] + bins[i+1]) / 2 for i in range(len(bins)-1)], bin_labels, fontsize=18)
 plt.yticks(fontsize=25)
-plt.title('Age distribution across participants', fontsize=30)
 
 # Save and show the plot
 plt.savefig(path + "age.png")
@@ -38,7 +37,6 @@ custom_colors = ['skyblue', 'cornflowerblue']
 plt.figure(figsize=(10, 10))
 sex_counts = df['sex'].value_counts()
 plt.pie(sex_counts, labels=sex_counts.index, autopct='%1.1f%%', startangle=90, colors=custom_colors, textprops={'fontsize': 30})
-plt.title('Gender Distribution', fontsize=30)  
 
 # Save and show the plot
 plt.savefig(path + "gender.png")
@@ -59,7 +57,6 @@ plt.xlabel('Years of eductation', fontsize = 30)
 plt.ylabel('Count', fontsize = 30)
 plt.xticks([(bins[i] + bins[i+1]) / 2 for i in range(len(bins)-1)], bin_labels, fontsize=18)
 plt.yticks(fontsize=25)
-plt.title('Education', fontsize=30)
 plt.savefig(path + "education.png")
 plt.show()
 
@@ -83,6 +80,5 @@ plt.xlabel('Counts', fontsize = 30)
 plt.ylabel('Countries', fontsize = 30)
 plt.xticks(fontsize=18)
 plt.yticks(fontsize=18)
-plt.title('Origins', fontsize=30)
 plt.savefig(path + "origins.png")
 plt.show()

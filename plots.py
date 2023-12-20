@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc, accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import SparsePCA, PCA
+from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 
 
@@ -192,40 +192,58 @@ logreg_model.fit(X_train, y_train)
 y_pred_logreg = logreg_model.predict(X_test)
 
 # Display the weights
-weights = logreg_model.coef_
-intercept = logreg_model.intercept_ # maybe it could also bring smth to look at the intercept
-
-# Display the weights
-weights = logreg_model.coef_[0]  # Assuming binary classification, so there is only one set of weights
+weights = logreg_model.coef_[0]  
 intercept = logreg_model.intercept_
 
-# Selects significant weights
-weights[np.abs(weights) < 0.5] = 0
+# Extracting the norm of the weights
+weights = np.abs(weights)
 
-# Get the indices of non-zero elements
-nonzero_indices = np.nonzero(weights)[0]
+# Plot weights norm histogram
+plt.figure(figsize=(8,6)) 
+plt.hist(weights, bins=10, color='skyblue')
+plt.xlabel('Weight')
+plt.ylabel('Frequency')
+plt.title('Histogram of Weights')
+plt.savefig(path + "histogram_weights")
+plt.show()
 
-# Plot the norm of the weights
+# Plot the norm of the weights 
+plt.figure(figsize=(10,12)) 
+plt.axhline(y=0.75, color='red', linestyle='--', label='Dotted Line at x=3')
 plt.bar(range(len(weights)), weights)
-plt.xlabel('Feature Index')
-plt.ylabel('Norm of Weights')
-plt.title('Norm of Weights in Logistic Regression')
+plt.xlabel('Feature Index', fontsize=30)
+plt.ylabel('Norm of Weights', fontsize=30)
+plt.xticks(fontsize=18)
+plt.yticks(fontsize=18)
 plt.savefig(path + "weights.png")
 plt.show()
 
-# Find inidices with significant weights
-nonzero_indiced = np.nonzero(weights)
+# Select significant weights
+weights[np.abs(weights) < 0.75] = 0
+
+# Get the indices of signicant elements
+nonzero_indices = np.nonzero(weights)[0]
+
+# Extract corresponding weights
+nonzero_weights = weights[nonzero_indices]
+
 
 # Initialize feature vector
-features = []
+features = ['EMR1', 'EMR4', 'EMR5', 'EMR8', 'KR6', 'KR7', 'M6', 'M9', 'S10', 'S12', 'T1', 'T3', 'T9']
 
-# Replace indice by feature
-for indice in nonzero_indices:
-    features.append(df.columns[indice])
-    
+new_ind = np.linspace(0,len(nonzero_indices), len(nonzero_indices))    
 # Display features
 print(" Features with significant weights: ", features)
-    
+
+# Plot the norm of the significant weights
+plt.figure(figsize= (10,12)) 
+plt.bar(new_ind, weights[nonzero_indices])
+plt.xlabel('Feature name', fontsize=30)
+plt.ylabel('Norm of Weights', fontsize=30)
+plt.xticks(new_ind, features ,  rotation='vertical',  ha='center', fontsize=18)
+plt.yticks(fontsize=18)
+plt.savefig(path + "significant_weights.png")
+plt.show()
 
 # < -------------------------------------ROC CURVE--------------------------------------- >
 # Best decision threshold for Logistic Regression 
