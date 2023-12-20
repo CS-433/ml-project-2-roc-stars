@@ -23,22 +23,6 @@ y = df['SURVEY_NAME']
 # Separate data into training and testing
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-# < ----------------------------------SPARCE PCA----------------------------------------- >
-# Trying sparse PCA
-spca = SparsePCA(n_components=2)
-spca_result = spca.fit_transform(X_train)
-
-# Create a DataFrame for visualization
-df_spca = pd.DataFrame(data=spca_result, columns=['PC1', 'PC2'])
-
-# Scatter plot
-plt.scatter(df_spca['PC1'], df_spca['PC2'])
-plt.title('Sparse PCA - Scatter Plot of PC1 vs PC2')
-plt.xlabel('Principal Component 1 (PC1)')
-plt.ylabel('Principal Component 2 (PC2)')
-plt.savefig(path + "pca_sparse.png")
-plt.show()
-
 # < --------------------------------------2D PCA----------------------------------------- >
 # Apply PCA to reduce the data to 2 dimensions
 pca = PCA(n_components=2)
@@ -196,7 +180,7 @@ plt.savefig(path + "bias.png")
 plt.rc('font', size=30)
 plt.yticks(fontsize=18)
 plt.show()
-# < ---------------------------LOGISTIC REGRESSION WEIGHTS------------------------------- >
+# < ---------------------------Logistic Regression Weights------------------------------- >
 # Plot weigths linear regression
 # Create the model
 logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
@@ -287,18 +271,3 @@ plt.title('Receiver Operating Characteristic (ROC) Curve')
 plt.savefig("plots/ROC_curve.png")
 plt.legend(loc='lower right')
 plt.show()
-
-# < -----------------------------Singular Value Decomposition---------------------------- >
-X_array = X.values
-
-# Perform Singular Value Decomposition (SVD)
-U, S, V = np.linalg.svd(X_array, full_matrices=False)
-
-# Convert the results back to DataFrames if needed
-U_df = pd.DataFrame(U, index=X.index, columns=[f'U_{i+1}' for i in range(U.shape[1])])
-S_df = pd.DataFrame(np.diag(S), index=[f'S_{i+1}' for i in range(S.shape[0])], columns=[f'S_{i+1}' for i in range(S.shape[0])])
-V_df = pd.DataFrame(V, index=[f'V_{i+1}' for i in range(V.shape[0])], columns=X.columns)
-
-
-rank = np.cumsum(S*S)/np.sum(S*S)
-print(rank[rank<0.95])

@@ -234,4 +234,15 @@ def clean(df_raw):
     high_std_columns = filled_df.columns[filled_df.std() > min_std]
     final_df = filled_df[high_std_columns]
     
+    df_weights = final_df.copy()
+    # Drop all the columns starting with KOERPERLICHE for weights analysis
+    columns_to_drop = [col for col in df_weights.columns if col.startswith('KOERPERLICHE')]
+    df_weights.drop(columns=columns_to_drop, inplace=True)
+
+    # Drop all the columns starting with EMOTIONALE for weights analysis
+    columns_to_drop = [col for col in df_weights.columns if col.startswith('EMOTIONALE')]
+    df_weights.drop(columns=columns_to_drop, inplace=True)
+    df_weights.to_csv('data/df_weights.csv', sep = ';')
+    
+    
     return final_df
