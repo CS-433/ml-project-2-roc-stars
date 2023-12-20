@@ -58,11 +58,11 @@ explained_variance_ratio = pca.explained_variance_ratio_
 print("Explained Variance Ratio obtained with PCA:", explained_variance_ratio)
 
 # Plot the 2D PCA result
-plt.figure(figsize=im_size) 
+plt.figure(figsize=(8,6)) 
 plt.scatter(x_tr_PCA_CUD[:, 0], x_tr_PCA_CUD[:, 1], s=20, color='dodgerblue', label='CUD', alpha=0.3)
 plt.scatter(x_tr_PCA_PTSD[:, 0], x_tr_PCA_PTSD[:, 1], s=20, color='red', label='PTSD', alpha=0.3)
-plt.xlabel('Principal Component 1', fontsize=font_size)
-plt.ylabel('Principal Component 2', fontsize=font_size)
+plt.xlabel('Principal Component 1', fontsize=18)
+plt.ylabel('Principal Component 2', fontsize=19)
 plt.grid(True)
 plt.savefig(path + "pca_colors.png")
 plt.rc('font', size=18)
@@ -148,7 +148,7 @@ print(" Ratio categorical features: ", categorical_ratio )
 
 # Plots categorical vs continuous features
 plt.figure(figsize=(8,6))
-plt.bar(types, ratios, color='grey', width=0.5)
+plt.bar(types, ratios, color='dodgerblue', width=0.5)
 plt.ylabel("Ratio", fontsize=30)
 plt.ylim(0,1)
 plt.xticks(types, ["Continuous", "Categorical"], fontsize=30)
@@ -170,7 +170,7 @@ features = np.arange(1, len(nans)+1)
 
 # Plot NaN ratio
 plt.figure(figsize=(10, 8)) 
-plt.bar(features, nans, color='orange')
+plt.bar(features, nans, color='royalblue')
 plt.xlabel("Feature number", fontsize=30)
 plt.ylabel("Ratio of NaN values", fontsize=30)
 plt.savefig(path + "nan.png")
@@ -188,7 +188,7 @@ total = len(y)
 ratios = [ptsd_count/total, cud_count/total]
 types = ['PTSD', 'CUD']
 plt.figure(figsize=(8, 6))
-plt.bar(types, ratios, color='green', width=0.5)
+plt.bar(types, ratios, color='crimson', width=0.5)
 plt.ylabel("Count", fontsize=30)  
 plt.ylim(0, 1) 
 plt.xticks(fontsize=30)  
