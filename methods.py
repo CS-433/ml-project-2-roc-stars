@@ -12,6 +12,11 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
+# < ----------------------------------Suppress Warning----------------------------------- >
+# Expected behaviour, warning is not necessary
+warnings.filterwarnings("ignore", message="Setting penalty=None will ignore the C and l1_ratio parameters", category=UserWarning)
+
+
 # < ------------------------------------Load data---------------------------------------- >
 df = pd.read_csv('data/final_data.csv', sep=";", header=0, index_col=0)
 # Insert bias term

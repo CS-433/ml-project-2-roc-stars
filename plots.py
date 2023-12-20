@@ -227,7 +227,7 @@ plt.savefig(path + "weights.png")
 plt.show()
 
 # Selects significant weights
-weights[np.abs(weights) < 0.5] = 0
+weights[np.abs(weights) < 0.75] = 0
 
 # Get the indices of signicant elements
 nonzero_indices = np.nonzero(weights)[0]
@@ -235,14 +235,6 @@ nonzero_indices = np.nonzero(weights)[0]
 # Extract corresponding weights
 nonzero_weights = weights[nonzero_indices]
 
-# Plot the norm of the significant weights
-plt.figure(figsize= im_size) 
-plt.bar(range(len(weights)), weights)
-plt.xlabel('Feature Index')
-plt.ylabel('Norm of Weights')
-plt.title('Norm of Weights in Logistic Regression')
-plt.savefig(path + "significant_weights.png")
-plt.show()
 
 # Initialize feature vector
 features = []
@@ -253,6 +245,16 @@ for indice in nonzero_indices:
     
 # Display features
 print(" Features with significant weights: ", features)
+
+# Plot the norm of the significant weights
+plt.figure(figsize= im_size) 
+plt.bar(range(len(weights)), weights)
+plt.xlabel('Feature')
+plt.ylabel('Norm of Weights')
+plt.title('Norm of Weights in Logistic Regression')
+plt.xticks(nonzero_indices, features ,  rotation='vertical',  ha='center', fontsize=6)
+plt.savefig(path + "significant_weights.png")
+plt.show()
     
 
 # < -------------------------------------ROC CURVE--------------------------------------- >

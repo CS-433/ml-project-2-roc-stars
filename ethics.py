@@ -9,7 +9,7 @@ path = "plots/ethics/"
 im_size = (8,6)
 
 # Set figures fontisze
-font_size = 12
+font_size = 15
 
 # Load dataset
 df = pd.read_csv('data/Data_Patients.csv', sep=";", header=0)
@@ -23,7 +23,7 @@ plt.ylabel('Count', fontsize = font_size)
 plt.savefig(path + "age.png")
 plt.show()
 
-#Plot Pie Chart of participants Gender
+# Plot Pie Chart of participants Gender
 # Map 0, 1 to female and male 
 df['sex'] = df['sex'].map({0: 'Female', 1: 'Male'})
 #ATTENTION IL FAUT DEMANDER SI O = HOMME OUR FEMME
