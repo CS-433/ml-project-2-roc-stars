@@ -8,7 +8,7 @@ The project consists of the following files:
 - `helper.py` : contains helper functions.
 - `methods.py` : contains the tuning as well as performance assessment of each methods except for multilayer perceptron.
 - `neural_networks.py`: contains the tuning as well as performance assessment of multilayer perceptron. 
-- `outliers.py` : generates predictions using logistic regression on both the dataset with and without outliers.
+- `ablation.py` : generates predictions using logistic regression on both the dataset without outliers and with feature augmentation to assess performance.
 - `plots.py` : generates data visualization plots.
 - `ethics.py` : generates plots of age, gender, origins and years of education.
 - `run.py` : generates predictions using the best model.
@@ -19,13 +19,19 @@ The folder `plots`contains data visualization `.png`files for the report as well
 ## Datasets
 The tuning and predictions are made using `final_data.csv`, which is split into `X_train`, `y_train`, `X_test` and `y_test` in each `.py` file where it is necessary.
 
-Link to download the dataset: https://github.com/epfml/ML_course/blob/master/projects/project1/data/dataset.zip
+The dataset contains confidential information and cannot be shared.
+The `final_data.csv` file is provided.
 
-## How to run the code
+## How to run the code 
+If you possess the `EMemory_data.csv` file:
 1. Download `EMemory_data.csv` and put it in a folder called `data`.
 2. Run the `data_cleaning_pd.py` file to generate `final_data.csv`.   
 3. Run the `run.py` file to generate our predictions with the best model.  
 
+If you do not possess the `EMemory_data.csv` file:
+1. Run the `run.py` file to generate our predictions with the best model.
+
+   
 If an error occurs (e.g. "function ... not defined"), run the `helper.py` file.
 
 ## License
