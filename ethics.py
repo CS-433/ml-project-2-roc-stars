@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 path = "plots/ethics/"
 
 # < -------------------------------------Load Dataset------------------------------------ >
-df = pd.read_csv('Datasets/Data_Patients.csv', sep=";", header=0)
+df = pd.read_csv('data/Data_Patients.csv', sep=";", header=0)
 
 # < ----------------------------------------Age------------------------------------------ >
 # Define age dataframe
