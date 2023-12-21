@@ -1,7 +1,7 @@
 # ML Project 2
 In this machine learning project, we want to forecast the diagnostic group of patients from their intrusion memories characteristics. 
 The two diagnostic groups are Post-Traumatic Stress Disorder (PTSD) and Cocaine Use Disorder (CUD). 
-We have data of 1001 individuals and over 600 features. 
+We have data of 1001 surveys and over 600 features. 
 This is a classification problem. 
 
 
@@ -23,6 +23,7 @@ The project consists of the following files:
 The folder `plots` contains data visualization `.png` files for the report as well as the `ethics` folder, which also contains `.png` files.
 
 ## Datasets
+The datasets provided by the laboratory
 The tuning and predictions are made using `final_data.csv`, which is split into `X_train`, `y_train`, `X_test` and `y_test` in each `.py` file where it is necessary.
 
 The dataset contains confidential information and cannot be shared.
