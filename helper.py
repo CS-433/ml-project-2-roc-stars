@@ -2,8 +2,6 @@
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, accuracy_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 # < -----------------------------------Functions----------------------------------------- >
@@ -149,7 +147,8 @@ def clean(df_raw):
     17. Concatenate continuous, binary columns, and labels.
     18. Assess and print the three smallest standard deviation values.
     19. Drop columns with low standard deviation (<0.1).
-    20. Return the final cleaned dataframe.
+    20. Remove duplicates and save dataframe to 'data/df_weights.csv'.
+    21. Return the final cleaned dataframe.
     """
     # Convert <no-response> and <not-shown> to NaN
     df_raw[df_raw == '<not-shown>'] = np.nan
@@ -243,6 +242,5 @@ def clean(df_raw):
     columns_to_drop = [col for col in df_weights.columns if col.startswith('EMOTIONALE')]
     df_weights.drop(columns=columns_to_drop, inplace=True)
     df_weights.to_csv('data/df_weights.csv', sep = ';')
-    
     
     return final_df

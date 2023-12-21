@@ -9,7 +9,6 @@ from sklearn.linear_model import LogisticRegression
 
 
 # < -----------------------------Define path to save plots------------------------------- >
-# Directory where the images will be saved
 path = "plots/"
 
 # < -----------------------------------Load dataset-------------------------------------- >
@@ -102,7 +101,6 @@ explained_variance_ratio = pca.explained_variance_ratio_
 print("Explained Variance Ratio obtained with PCA:", explained_variance_ratio)
 
 # < -----------------------Visualize categorical vs. continuous features----------------- >
-# CATEGORICAL AND CONTINOUS FEATURES
 # Categorical headers keyword
 categorical_headers = ['REAKTION', 'MODALITAET', 'STRATEGIE', 'TRIGGER', 'STIMMUNG']
 
@@ -141,8 +139,7 @@ plt.rc('font', size=18)
 plt.show()
 
 # < ---------------------------------Visualize missing values---------------------------- >
-# Plots missing values 
-#Import df before nan removal
+# Import df before NaN removal
 df_nan = pd.read_csv('data/nan_data.csv', sep=";", header=0, index_col=0)
 
 # Calculate the percentage of NaN values in each column
@@ -181,7 +178,6 @@ plt.rc('font', size=30)
 plt.yticks(fontsize=18)
 plt.show()
 # < ---------------------------Logistic Regression Weights------------------------------- >
-# Plot weigths linear regression
 # Create the model
 logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
 
@@ -228,12 +224,9 @@ nonzero_indices = np.nonzero(weights)[0]
 nonzero_weights = weights[nonzero_indices]
 
 
-# Initialize feature vector
+# Define features
 features = ['EMR1', 'EMR4', 'EMR5', 'EMR8', 'KR6', 'KR7', 'M6', 'M9', 'S10', 'S12', 'T1', 'T3', 'T9']
-
-new_ind = np.linspace(0,len(nonzero_indices), len(nonzero_indices))    
-# Display features
-print(" Features with significant weights: ", features)
+new_ind = np.linspace(0,len(nonzero_indices), len(nonzero_indices)) 
 
 # Plot the norm of the significant weights
 plt.figure(figsize= (10,12)) 
