@@ -36,7 +36,7 @@ If an error occurs (e.g. "function ... not defined"), run the `helper.py` file.
 Note that the `Data_Patients.csv` file is confidential and could not be shared. The file `ethics.py` cannot be run without it, however the plots it generates are in the folder `plots/ethics`. 
 
 
-Please note that the link to download the 'EMemory_data.csv' file will expire on February 3, 2024.
+Please note that the link to download the `EMemory_data.csv` file will expire on February 3, 2024.
 
 ## Libraries
 The required libraries that must be installed are listed in the `requirements.txt` file. 
