@@ -5,12 +5,12 @@ We have data of 1001 surveys and over 600 features.
 This is a classification problem. 
 
 
-The project is done under the supervision Dr. Lina Dietker at the Experimentelle Psychopathologie und Psychotherapie laboratory at the University of Zurich.
+The project is done under the supervision of Dr. Lina Dietker at the Experimentelle Psychopathologie und Psychotherapie laboratory at the University of Zurich.
 
 
 ## Code structure
 The project consists of the following files:
-- `data_cleansing`: generates the cleaned data set `final_data.csv`.
+- `data_cleaning.py`: generates the cleaned dataset `final_data.csv`.
 - `helper.py` : contains helper functions.
 - `methods.py` : contains the tuning as well as performance assessment of each methods except for multilayer perceptron.
 - `neural_networks.py` : contains the tuning as well as performance assessment of multilayer perceptron. 
@@ -26,8 +26,6 @@ The folder `plots` contains data visualization `.png` files for the report as we
 The datasets provided by the laboratory
 The tuning and predictions are made using `final_data.csv`, which is split into `X_train`, `y_train`, `X_test` and `y_test` in each `.py` file where it is necessary.
 
-The dataset contains confidential information and cannot be shared.
-The `final_data.csv` file is provided.
 
 ## How to run the code 
 1. Download `EMemory_data.csv` from this [site](https://filesender.switch.ch/filesender2/?s=download&token=59c86fac-3ab3-46c7-9c44-7a6b2a3d6f3c) and store it in a folder called `data`.
