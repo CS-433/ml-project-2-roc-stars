@@ -24,7 +24,7 @@ params_lr = {
 # < --------------------------------WITHOUT OUTLIERS------------------------------------- >
 X_train_nout = remove_outliers(X_train)
 X_test_nout = remove_outliers(X_test)
-# Tuning and fitting using Grid Search
+# Tuning and fitting using Grid Search CV
 grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
 grid_search.fit(X_train_nout, y_train)
 
@@ -37,7 +37,7 @@ X_poly = poly.fit_transform(X)
 X_poly_df = pd.DataFrame(X_poly)
 X_poly_df.columns = X_poly_df.columns.astype(str)
 X_train_poly, X_test_poly, y_train_poly, y_test_poly = train_test_split(X_poly, y, test_size=0.2, random_state=0)
-# Tuning and fitting using Grid Search
+# Tuning and fitting using Grid Search CV
 grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
 grid_search.fit(X_train_poly, y_train)
 
