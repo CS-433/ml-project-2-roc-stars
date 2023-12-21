@@ -12,7 +12,6 @@ from sklearn.linear_model import LogisticRegression
 path = "plots/"
 
 # < -----------------------------------Load dataset-------------------------------------- >
-# Load dataset
 df = pd.read_csv('Datasets/final_data.csv', sep=";", header=0, index_col=0)
 
 # Separate X from prediction y
@@ -103,11 +102,8 @@ print("Explained Variance Ratio obtained with PCA:", explained_variance_ratio)
 # < -----------------------Visualize categorical vs. continuous features----------------- >
 # Categorical headers keyword
 categorical_headers = ['REAKTION', 'MODALITAET', 'STRATEGIE', 'TRIGGER', 'STIMMUNG']
-
-# Get headers
 headers_list = df.columns.tolist()
 
-# Intialize categorical count
 categorical = 0
 
 # Check if categorical or continous
@@ -115,17 +111,16 @@ for keyword in categorical_headers:
     matching_strings = [string for string in headers_list if keyword in string]
     categorical += len(matching_strings)
 
-# Deduce continous features
 nbr_features = len(headers_list)
 continuous = nbr_features - categorical
 
-# Calculates ratio of continous and categorical features
+# Calculate ratio of continous and categorical features
 categorical_ratio = categorical / nbr_features
 continuous_ratio = continuous / nbr_features
 ratios = [continuous_ratio, categorical_ratio]
 types = ['Continuous', 'Categorical']
-print(" Ratio continous features: ", continuous_ratio )
-print(" Ratio categorical features: ", categorical_ratio )
+print("Ratio continous features: ", continuous_ratio )
+print("Ratio categorical features: ", categorical_ratio )
 
 
 # Plots categorical vs continuous features
@@ -158,7 +153,7 @@ plt.savefig(path + "nan.png")
 plt.rc('font', size=18)
 plt.show()
 
-# Number fo features larger than 15 %
+# Number of features larger than 15 %
 features_nan = np.sum(nans > 15)
 print( features_nan , "% of features have a percentage of NaN higher than 15%. ")
 
@@ -178,20 +173,17 @@ plt.rc('font', size=30)
 plt.yticks(fontsize=18)
 plt.show()
 # < ---------------------------Logistic Regression Weights------------------------------- >
-# Create the model
+# Model definition
 logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
-
-# Train the model
 logreg_model.fit(X_train, y_train)
 
-# Make predictions
 y_pred_logreg = logreg_model.predict(X_test)
 
 # Display the weights
 weights = logreg_model.coef_[0]  
 intercept = logreg_model.intercept_
 
-# Extracting the norm of the weights
+# Norm of the weights
 weights = np.abs(weights)
 
 # Plot weights norm histogram
@@ -216,13 +208,10 @@ plt.show()
 
 # Select significant weights
 weights[np.abs(weights) < 0.75] = 0
-
-# Get the indices of signicant elements
 nonzero_indices = np.nonzero(weights)[0]
 
 # Extract corresponding weights
 nonzero_weights = weights[nonzero_indices]
-
 
 # Define features
 features = ['EMR1', 'EMR4', 'EMR5', 'EMR8', 'KR6', 'KR7', 'M6', 'M9', 'S10', 'S12', 'T1', 'T3', 'T9']

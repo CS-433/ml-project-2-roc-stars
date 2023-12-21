@@ -32,7 +32,9 @@ params_lr = {
 logreg_model = LogisticRegression(random_state=42, max_iter=3000)
 grid_search = GridSearchCV(logreg_model, params_lr, cv=5, scoring='accuracy')
 grid_search.fit(X_train, y_train)
+
 model_performance(grid_search, X_test, y_test)
+# best hyper-parameters: {'C': 1, 'penalty': 'l2'}
 
 # < --------------------------------Random Forest Classifier----------------------------- >
 # Hyperparameters to try
@@ -46,7 +48,9 @@ param_grid = {
 rf_classifier = RandomForestClassifier(random_state=42)
 grid_search_rf = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv=5, scoring='accuracy')
 grid_search_rf.fit(X_train, y_train)
+
 model_performance(grid_search_rf, X_test, y_test)
+# best hyper-parameters: {'max_depth': 20, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}
 
 # < --------------------------------Gradient Boosting------------------------------------ >
 # Hyperparameters to try
@@ -61,7 +65,9 @@ param_grid_gb = {
 gb_classifier = GradientBoostingClassifier(random_state=42)
 grid_search_gb = GridSearchCV(gb_classifier, param_grid_gb, cv=5, scoring='accuracy')
 grid_search_gb.fit(X_train, y_train)
+
 model_performance(grid_search_gb, X_test, y_test)
+# best hyper-parameters: {'learning_rate': 0.2, 'max_depth': 5, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 200}
 
 # < --------------------------------K Nearest Neighbors---------------------------------- >
 # Hyperparameters to try
@@ -73,8 +79,9 @@ params_knn = {
 knn = KNeighborsClassifier()
 grid_search_knn = GridSearchCV(knn, params_knn, cv=5, scoring='accuracy')
 grid_search_knn.fit(X_train, y_train)
+
 model_performance(grid_search_knn, X_test, y_test)
-# {'metric': 'manhattan', 'n_neighbors': 9}
+# best hyper-parameters: {'metric': 'manhattan', 'n_neighbors': 9}
 
 # < --------------------------------Support Vector Machine------------------------------- >
 # Hyperparameters to try
@@ -87,8 +94,9 @@ params_svm = {
 svm_classifier = SVC()
 grid_search_svm = GridSearchCV(svm_classifier, params_svm, cv=5, scoring='accuracy')
 grid_search_svm.fit(X_train, y_train)
+
 model_performance(grid_search_svm, X_test, y_test)
-# {'C': 1, 'gamma': 'auto', 'kernel': 'poly'}
+# best hyper-parameters: {'C': 1, 'gamma': 'auto', 'kernel': 'poly'}
 
 # < ------------------------------Gaussian Mixture Model--------------------------------- >
 # Hyperparameters to try
@@ -98,9 +106,8 @@ params_gmm = {
 }
 # Model definition
 gmm = GaussianMixture()
-
 grid_search_gmm = GridSearchCV(gmm, params_gmm, cv=5, scoring='accuracy')  
-grid_search_gmm.fit(X_train, y_train)  # Note: y_train is not used for GMM
+grid_search_gmm.fit(X_train, y_train) 
 
 model_performance(grid_search_gmm, X_test, y_test)
-# {'covariance_type': 'diag', 'n_components': 2}
+# best hyper-parameters: {'covariance_type': 'diag', 'n_components': 2}

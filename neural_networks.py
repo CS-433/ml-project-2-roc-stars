@@ -12,11 +12,11 @@ X = df.drop(columns=['SURVEY_NAME'])
 y = df['SURVEY_NAME']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-# < ---------------Multilayer Perceptron tuning using GRIDSEARCH------------------------- >
+# < ---------------Multilayer Perceptron tuning using GRIDSEARCH CV------------------------- >
 # Define model
 mlp_classifier = MLPClassifier()
 
-# Define the hyperparameter grid to search
+# Hyperparameters to try
 params_mlp = {
     'hidden_layer_sizes': [(50, 50), (55, 55)],
     'activation': ['tanh', 'relu'],
@@ -28,46 +28,34 @@ params_mlp = {
     'random_state' : [42]
 }
 
-# Create the grid search object
+# Grid search CV
 scoring_metrics = ['accuracy', 'f1_weighted']
 grid_search = GridSearchCV(mlp_classifier, params_mlp, cv=5, scoring=scoring_metrics, refit='f1_weighted')
 
-# Fit the grid search to the data
 start_time = time.time()
 grid_search.fit(X_train, y_train)
 stop_time = time.time()
 fitting_time = stop_time-start_time
 print("Fitting time: ", fitting_time)
-
-# Print the best hyperparameters
 print("Best Hyperparameters:", grid_search.best_params_) # {'activation': 'tanh', 'batch_size': 64, 'beta_1': 0, 'beta_2': 0.99, 'hidden_layer_sizes': (50, 50), 'max_iter': 1000, 'solver': 'adam'}
 
-# Make predictions on the test set using the best model
 y_pred = grid_search.predict(X_test)
-
-# Evaluate the accuracy of the tuned model
 accuracy = accuracy_score(y_test, y_pred)
 f1score = f1_score(y_test, y_pred)
 print("MLP grid search\n","Accuracy: ", accuracy, "\n", "F1 score:", f1score)
 
-# < ---------------Multilayer Perceptron tuning using RANDOMIZEDSEARCH------------------- >
-# Create the random search object
+# < ---------------Multilayer Perceptron tuning using RANDOMIZEDSEARCH CV------------------- >
+# Random search CV
 random_search = RandomizedSearchCV(mlp_classifier, params_mlp, cv=5, scoring=scoring_metrics, refit='f1_weighted', n_iter=10)
 
-# Fit the grid search to the data
 start_time = time.time()
 random_search.fit(X_train, y_train)
 stop_time = time.time()
 fitting_time = stop_time-start_time
 print("Fitting time: ", fitting_time)
-
-# Print the best hyperparameters
 print("Best Hyperparameters:", random_search.best_params_) # {'solver': 'sgd', 'max_iter': 1000, 'hidden_layer_sizes': (55, 55), 'beta_2': 0.7, 'beta_1': 0.9, 'batch_size': 32, 'activation': 'relu'}
 
-# Make predictions on the test set using the best model
 y_pred_rand = random_search.predict(X_test)
-
-# Evaluate the accuracy of the tuned model
 accuracy_rand = accuracy_score(y_test, y_pred_rand)
 f1score_rand = f1_score(y_test, y_pred_rand)
 print("MLP random search\n","Accuracy: ", accuracy_rand, "\n", "F1 score:", f1score_rand)
@@ -83,13 +71,9 @@ for train_index, val_index in cv.split(X_train, y_train):
     X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
     y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
 
-    # Fit the model on the training fold
     mlp_man.fit(X_train_fold, y_train_fold)
 
-    # Predict on the validation fold
     y_pred_val = mlp_man.predict(X_val_fold)
-
-    # Calculate and store the F1 score for this fold
     f1_fold = f1_score(y_val_fold, y_pred_val, average='micro')
     f1_scores.append(f1_fold)
 

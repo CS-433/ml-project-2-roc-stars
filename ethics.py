@@ -43,7 +43,7 @@ plt.savefig(path + "gender.png")
 plt.show()
 
 # < ----------------------------------Years of Education--------------------------------- >
-#Plot Histogram of participants number of years of education
+# Plot Histogram of participants number of years of education
 # Replace commas with decimal points and convert to numeric
 df['years_of_education'] = pd.to_numeric(df['years_of_education'].str.replace(',', '.'), errors='coerce')
 # Plot Histogram
@@ -70,7 +70,7 @@ origin_df = df[origins]
 category_counts = origin_df.stack().value_counts()
 
 # Display the counts
-counts =category_counts.values
+counts = category_counts.values
 countries = category_counts.index.tolist()
 
 # Plot
