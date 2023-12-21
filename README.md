@@ -1,6 +1,6 @@
 # ML Project 2
 In this machine learning project, we want to forecast the diagnostic group of patients from their intrusive memories characteristics. 
-The two diagnostic groups are Post-Traumatic Stress Disorder (PTSD) and Cocaine Use Disorder (CUD) patients. 
+The two diagnostic groups are Post-Traumatic Stress Disorder (PTSD) and Cocaine Use Disorder (CUD). 
 In the raw dataset we have data of 1001 surveys and over 600 features. 
 This is a classification problem. 
 
@@ -34,7 +34,9 @@ If an error occurs (e.g. "function ... not defined"), run the `helper.py` file.
 
 
 Note that the `Data_Patients.csv` file is confidential and could not be shared. The file `ethics.py` cannot be run without it, however the plots it generates are in the folder `plots/ethics`. 
-Note also that the link to download the `EMemory_data.csv` file expires on the 03.02.2024.
+
+
+Please note that the link to download the 'EMemory_data.csv' file will expire on February 3, 2024.
 
 ## Libraries
 The required libraries that must be installed are listed in the `requirements.txt` file. 
