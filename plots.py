@@ -135,7 +135,7 @@ plt.show()
 
 # < ---------------------------------Visualize missing values---------------------------- >
 # Import df before NaN removal
-df_nan = pd.read_csv('data/nan_data.csv', sep=";", header=0, index_col=0)
+df_nan = pd.read_csv('Datasets/nan_data.csv', sep=";", header=0, index_col=0)
 
 # Calculate the percentage of NaN values in each column
 df_nan = (df_nan.isna().mean() * 100)
@@ -148,7 +148,7 @@ features = np.arange(1, len(nans)+1)
 plt.figure(figsize=(10, 8)) 
 plt.bar(features, nans, color='royalblue')
 plt.xlabel("Feature number", fontsize=30)
-plt.ylabel("Ratio of NaN values", fontsize=30)
+plt.ylabel("% of NaN values", fontsize=30)
 plt.savefig(path + "nan.png")
 plt.rc('font', size=18)
 plt.show()
@@ -165,7 +165,7 @@ ratios = [ptsd_count/total, cud_count/total]
 types = ['PTSD', 'CUD']
 plt.figure(figsize=(8, 6))
 plt.bar(types, ratios, color='crimson', width=0.5)
-plt.ylabel("Count", fontsize=30)  
+plt.ylabel("Ratio", fontsize=30)  
 plt.ylim(0, 1) 
 plt.xticks(fontsize=30)  
 plt.savefig(path + "bias.png")
