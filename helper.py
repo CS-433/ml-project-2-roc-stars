@@ -163,12 +163,13 @@ def remove_consecutive_duplicates(cell):
     return ' '.join(cleaned_words)
 
 
-def clean(df_raw):
+def clean(df_raw, standardization=True):
     """
     Clean and preprocess a raw dataframe from survey data.
 
     Parameters:
-    - df_raw (pd.DataFrame): The raw dataframe containing survey data.
+    - df_raw (pd.DataF(rame): The raw dataframe containing survey data.
+    - standardization (Bool): If true, the continuous features are standardized
 
     Returns:
     - final_df (pd.DataFrame): Cleaned and preprocessed dataframe.
@@ -261,9 +262,12 @@ def clean(df_raw):
     binary_df[binary_df.columns] = binary_df[binary_df.columns].apply(lambda x: x.fillna(x.mode().iloc[0]))
     
     # Standardize continuous columns
-    scaler = StandardScaler()
-    continuous_df[continuous_df.columns] = scaler.fit_transform(continuous_df[continuous_df.columns])
-    
+    if standardization:
+        scaler = StandardScaler()
+        continuous_df[continuous_df.columns] = scaler.fit_transform(continuous_df[continuous_df.columns])
+    else:
+        new_labels = new_labels.astype('int64')
+
     # Regroup continous, binary columns and labels
     filled_df = pd.concat([continuous_df, binary_df, new_labels], axis = 1)
 
