@@ -136,7 +136,7 @@ def clean(df_raw):
     6. Remove consecutive duplicates in cells.
     7. Replace values larger than 10 with NaN.
     8. Replace non-standard representations with actual NaN.
-    9. Save the cleaned dataframe to 'data/nan_data.csv'.
+    9. Save the cleaned dataframe to 'Datasets/nan_data.csv'.
     10. Calculate the percentage of NaN values in each column.
     11. Select columns with less than 15% NaN values.
     12. Concatenate selected columns with labels.
@@ -147,7 +147,7 @@ def clean(df_raw):
     17. Concatenate continuous, binary columns, and labels.
     18. Assess and print the three smallest standard deviation values.
     19. Drop columns with low standard deviation (<0.1).
-    20. Remove duplicates and save dataframe to 'data/df_weights.csv'.
+    20. Remove duplicates and save dataframe to 'Datasets/df_weights.csv'.
     21. Return the final cleaned dataframe.
     """
     # Convert <no-response> and <not-shown> to NaN
@@ -190,7 +190,7 @@ def clean(df_raw):
     cleaned_df.replace(['nan', ''], np.nan, inplace=True)
 
     # Saves dataframe for NaN Visualisation
-    cleaned_df.to_csv('data/nan_data.csv', sep = ';')
+    cleaned_df.to_csv('Datasets/nan_data.csv', sep = ';')
 
     nan_perc_limit = 15
     # Calculate the percentage of NaN values in each column
@@ -241,6 +241,6 @@ def clean(df_raw):
     # Drop all the columns starting with EMOTIONALE for weights analysis
     columns_to_drop = [col for col in df_weights.columns if col.startswith('EMOTIONALE')]
     df_weights.drop(columns=columns_to_drop, inplace=True)
-    df_weights.to_csv('data/df_weights.csv', sep = ';')
+    df_weights.to_csv('Datasets/df_weights.csv', sep = ';')
     
     return final_df
