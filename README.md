@@ -20,11 +20,7 @@ The project consists of the following files:
 - `run.py` : generates predictions using the best model.
 
   
-The folder `plots` contains data visualization `.png` files for the report as well as the `ethics` folder, which also contains `.png` files.
-
-## Datasets
-The datasets provided by the laboratory
-The tuning and predictions are made using `final_data.csv`, which is split into `X_train`, `y_train`, `X_test` and `y_test` in each `.py` file where it is necessary.
+The folders `plots` and `ethics` contain data visualization `.png` files for the report.
 
 
 ## How to run the code 
@@ -33,6 +29,9 @@ The tuning and predictions are made using `final_data.csv`, which is split into 
 3. Run the `run.py` file to generate our predictions with the best model.  
 
 If an error occurs (e.g. "function ... not defined"), run the `helper.py` file.
+
+## Libraries
+The required libraries that must be installed are listed in the `requirements.txt` file. 
 
 ## License
 © 2023 GitHub, Inc.
