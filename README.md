@@ -24,11 +24,16 @@ The folders `plots` and `ethics` contain data visualization `.png` files for the
 
 
 ## How to run the code 
-1. Download `EMemory_data.csv` from this [site](https://filesender.switch.ch/filesender2/?s=download&token=59c86fac-3ab3-46c7-9c44-7a6b2a3d6f3c) and store it in a folder called `data`.
-2. Run the `data_cleaning_pd.py` file to generate `final_data.csv`.   
-3. Run the `run.py` file to generate our predictions with the best model.  
+1. Clone github repository.
+2. Download `EMemory_data.csv` from this [site](https://filesender.switch.ch/filesender2/?s=download&token=59c86fac-3ab3-46c7-9c44-7a6b2a3d6f3c) and store it in a folder called `data`.
+3. Create a folder `Datasets`.
+4. Run the `data_cleaning.py` file to generate `final_data.csv`.   
+5. Run the `run.py` file to generate our predictions with the best model.  
 
 If an error occurs (e.g. "function ... not defined"), run the `helper.py` file.
+
+
+Note that the `Data_Patients.csv` file is confidential and could not be shared. The file `ethics.py` cannot be run without it, however the plots it generates are in the folder `plots/ethics`.
 
 ## Libraries
 The required libraries that must be installed are listed in the `requirements.txt` file. 
