@@ -173,15 +173,22 @@ plt.rc('font', size=30)
 plt.yticks(fontsize=18)
 plt.show()
 # < ---------------------------Logistic Regression Weights------------------------------- >
+# Load data weights
+df_w = pd.read_csv('Datasets/df_weights.csv', sep=";", header=0, index_col=0)
+
+# Separate X from prediction y
+X_w = df_w.drop(columns=['SURVEY_NAME'])
+y_w = df_w['SURVEY_NAME']
+
+# Separate data into training and testing
+X_train_w, _, y_train_w, _ = train_test_split(X_w, y_w, test_size=0.2, random_state=0)
+
 # Model definition
 logreg_model = LogisticRegression(penalty='l2', C=1.0, random_state=42, max_iter=1000)
-logreg_model.fit(X_train, y_train)
-
-y_pred_logreg = logreg_model.predict(X_test)
+logreg_model.fit(X_train_w, y_train_w)
 
 # Display the weights
 weights = logreg_model.coef_[0]  
-intercept = logreg_model.intercept_
 
 # Norm of the weights
 weights = np.abs(weights)
@@ -218,11 +225,11 @@ features = ['EMR1', 'EMR4', 'EMR5', 'EMR8', 'KR6', 'KR7', 'M6', 'M9', 'S10', 'S1
 new_ind = np.linspace(0,len(nonzero_indices), len(nonzero_indices)) 
 
 # Plot the norm of the significant weights
-plt.figure(figsize= (10,12)) 
+plt.figure(figsize= (10,14))
 plt.bar(new_ind, weights[nonzero_indices])
 plt.xlabel('Feature name', fontsize=30)
 plt.ylabel('Norm of Weights', fontsize=30)
-plt.xticks(new_ind, features ,  rotation='vertical',  ha='center', fontsize=18)
+plt.xticks(new_ind, features ,  rotation='vertical',  ha='center', fontsize=25)
 plt.yticks(fontsize=18)
 plt.savefig(path + "significant_weights.png")
 plt.show()
