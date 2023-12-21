@@ -30,15 +30,10 @@ The dataset contains confidential information and cannot be shared.
 The `final_data.csv` file is provided.
 
 ## How to run the code 
-If you possess the `EMemory_data.csv` file:
-1. Download `EMemory_data.csv` and put it in a folder called `data`.
+1. Download `EMemory_data.csv` from this [site](https://filesender.switch.ch/filesender2/?s=download&token=59c86fac-3ab3-46c7-9c44-7a6b2a3d6f3c) and store it in a folder called `data`.
 2. Run the `data_cleaning_pd.py` file to generate `final_data.csv`.   
 3. Run the `run.py` file to generate our predictions with the best model.  
 
-If you do not possess the `EMemory_data.csv` file:
-1. Run the `run.py` file to generate our predictions with the best model.
-
-   
 If an error occurs (e.g. "function ... not defined"), run the `helper.py` file.
 
 ## License
